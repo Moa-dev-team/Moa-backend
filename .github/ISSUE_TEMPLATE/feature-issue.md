@@ -1,10 +1,6 @@
 ---
 name: feature issue
 about: 내가 개발하고 싶은 걸 issue로 만드세요!
-title: ''
-labels: ''
-assignees: ''
-
 ---
 
 ## 💬 Description 
