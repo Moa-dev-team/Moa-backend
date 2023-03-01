@@ -1,7 +1,10 @@
 package com.moa.domain.user.entity;
 
+import com.moa.sercurity.dto.SignupDto;
 import javax.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class User {
 
@@ -21,4 +24,16 @@ public class User {
   @Column(name = "profile")
   private String profile;
 
+  @Enumerated(EnumType.STRING)
+  private Role role;
+
+  //==생성 메서드==//
+  public static User registerUser(SignupDto signupDto) {
+    User user = new User();
+    user.email = signupDto.getEmail();
+    user.password = signupDto.getPassword();
+    user.role = Role.USER;
+
+    return user;
+  }
 }
