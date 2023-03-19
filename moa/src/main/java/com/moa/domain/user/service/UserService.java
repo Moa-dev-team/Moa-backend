@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @Transactional
-  public void registerUser(SignupDto signupDto) {
-    User user = User.registerUser(signupDto);
-    userRepository.save(user);
-  }
+    @Transactional
+    public void registerUser(SignupDto signupDto) {
+        User user = User.registerUser(signupDto);
+        userRepository.save(user);
+    }
 
 }
