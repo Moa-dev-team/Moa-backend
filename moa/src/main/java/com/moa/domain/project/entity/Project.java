@@ -1,5 +1,7 @@
-package com.moa.domain.project.model;
+package com.moa.domain.project.entity;
 
+import com.moa.domain.project.value.MeetingType;
+import com.moa.domain.project.value.ProjectStatus;
 import com.moa.domain.utility.BaseEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;

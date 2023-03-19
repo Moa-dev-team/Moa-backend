@@ -1,4 +1,4 @@
-package com.moa.domain.project.model;
+package com.moa.domain.project.value;
 
 public enum ProjectStatus {
     OPENING("모집중"), CLOSED("마감"),
