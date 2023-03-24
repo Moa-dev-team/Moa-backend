@@ -1,25 +1,28 @@
 package com.moa.domain.study.entity;
 
+import com.moa.domain.utility.BaseEntity;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Data
-public class Study {
+public class Study extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private Long id;
 
+  @Column(name = "title")
   private String title;
 
   @Column(name = "introduce_content", length = 500)
@@ -50,12 +53,18 @@ public class Study {
   @Column(name = "register_date") // 시작 예정일을 비워둘 수 있게?
   private Date startDate;
 
+  @Column(name = "period")
   private int period;
 
+  // 디폴트 적용시킬 수 있는 방법 찾아보기
+  // Prepersist(null일때만 디폴트 적용시키고 싶을 때 )
+  // 또는 @Column에 columnDefinition = "자료형 default ''" 추가
   @Column(name = "visit_count")
-  @ColumnDefault("0")  // 조회수 0 시작이니까 디폴트 적용
   private int visitCount;
 
-  @ColumnDefault("0") // 생성 할 땐 모집 중이므로 0을 디폴트로
+  @Column(name = "status")
   private int status;
+
 }
+
+
