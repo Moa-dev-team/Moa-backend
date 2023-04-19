@@ -1,8 +1,10 @@
 package com.moa2.service.auth;
 
+import com.moa2.dto.auth.LoginDto;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.jwt.JwtValidator;
 import com.moa2.security.jwt.TokenDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +27,7 @@ public class AuthService {
     private final JwtValidator jwtValidator;
 
     @Transactional
-    public TokenDto login(LoginDto loginDto) {
+    public TokenDto login(@Valid LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 

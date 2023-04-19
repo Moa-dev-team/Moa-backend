@@ -1,8 +1,10 @@
 package com.moa2.service.member;
 
 import com.moa2.domain.member.Member;
+import com.moa2.dto.auth.SignupDto;
 import com.moa2.repository.member.AuthorityRepository;
 import com.moa2.repository.member.MemberRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +42,7 @@ public class MemberService {
         return member.getEmail();
     }
 
-    public Member createUser(SignupDto signupDto) {
+    public Member createUser(@Valid SignupDto signupDto) {
         Member member = new Member();
         member.setNickname(signupDto.getNickname());
         member.setEmail(signupDto.getEmail());
