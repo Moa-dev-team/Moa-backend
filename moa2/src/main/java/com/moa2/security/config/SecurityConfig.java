@@ -1,5 +1,6 @@
 package com.moa2.security.config;
 
+import com.moa2.security.jwt.exception.JwtAccessDeniedHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
