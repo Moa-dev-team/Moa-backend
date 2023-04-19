@@ -3,6 +3,7 @@ package com.moa2.security.jwt;
 import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.LoginDto;
 import com.moa2.dto.auth.SignupDto;
+import com.moa2.dto.auth.TokenDto;
 import com.moa2.repository.member.MemberRepository;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

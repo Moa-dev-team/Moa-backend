@@ -1,9 +1,10 @@
 package com.moa2.security.jwt;
 
+import com.moa2.dto.auth.TokenDto;
 import com.moa2.repository.member.MemberRepository;
 import com.moa2.service.auth.AccessTokenService;
 import com.moa2.service.auth.RefreshTokenService;
-import com.moa2.service.userdetails.MemberDetails;
+import com.moa2.security.userdetails.MemberDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

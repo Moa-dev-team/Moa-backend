@@ -3,7 +3,7 @@ package com.moa2.service.auth;
 import com.moa2.dto.auth.LoginDto;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.jwt.JwtValidator;
-import com.moa2.security.jwt.TokenDto;
+import com.moa2.dto.auth.TokenDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -6,7 +6,7 @@ import com.moa2.dto.auth.SignupDto;
 import com.moa2.repository.member.MemberRepository;
 import com.moa2.repository.redis.RedisRepository;
 import com.moa2.security.jwt.JwtValidator;
-import com.moa2.security.jwt.TokenDto;
+import com.moa2.dto.auth.TokenDto;
 import com.moa2.service.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

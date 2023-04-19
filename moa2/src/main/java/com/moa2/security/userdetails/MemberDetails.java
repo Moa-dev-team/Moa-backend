@@ -1,4 +1,4 @@
-package com.moa2.service.userdetails;
+package com.moa2.security.userdetails;
 
 import com.moa2.domain.member.Member;
 import lombok.RequiredArgsConstructor;

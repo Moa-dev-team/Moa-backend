@@ -1,4 +1,4 @@
-package com.moa2.security.jwt;
+package com.moa2.dto.auth;
 
 import lombok.Getter;
 
