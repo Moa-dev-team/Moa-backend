@@ -12,12 +12,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AuthService {
 
     private final RefreshTokenService refreshTokenService;
@@ -26,7 +24,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtValidator jwtValidator;
 
-    @Transactional
     public TokenDto login(@Valid LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -37,7 +34,6 @@ public class AuthService {
         return jwtTokenProvider.createTokens(authentication);
     }
 
-    @Transactional
     public void logout(String accessTokenInHeader) {
         String accessToken = resolveToken(accessTokenInHeader);
         if (!jwtValidator.validateAccessToken(accessToken)) {
@@ -48,7 +44,6 @@ public class AuthService {
         refreshTokenService.deleteRefreshToken(refreshToken);
     }
 
-    @Transactional
     public TokenDto refresh(String refreshToken) {
         if (!jwtValidator.validateRefreshToken(refreshToken)) {
             throw new IllegalArgumentException("Invalid token");

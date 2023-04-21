@@ -23,9 +23,7 @@ public class InitDb {
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
-        private final MemberService memberService;
         private final AuthorityRepository authorityRepository;
-        private final PasswordEncoder encoder;
         public void dbInit() {
             authorityRepository.save(new Authority("ROLE_USER"));
             authorityRepository.save(new Authority("ROLE_ADMIN"));
