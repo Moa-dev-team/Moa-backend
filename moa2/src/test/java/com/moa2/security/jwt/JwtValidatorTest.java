@@ -4,9 +4,11 @@ import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.LoginDto;
 import com.moa2.dto.auth.SignupDto;
 import com.moa2.dto.auth.TokenDto;
+import com.moa2.exception.InvalidTokenRequestException;
 import com.moa2.repository.member.MemberRepository;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -58,8 +61,7 @@ class JwtValidatorTest {
         loginDto.setEmail("test@example.com");
         loginDto.setPassword("password");
         TokenDto tokenDto = authService.login(loginDto);
-
-        assertThat(jwtValidator.validateToken(tokenDto.getAccessToken())).isTrue();
+        
         assertThat(jwtValidator.validateAccessToken(tokenDto.getAccessToken())).isTrue();
     }
 
@@ -72,7 +74,7 @@ class JwtValidatorTest {
 
         String badAccessToken = tokenDto.getAccessToken() + "bad";
 
-        assertThat(jwtValidator.validateToken(badAccessToken)).isFalse();
+        assertThrows(InvalidTokenRequestException.class, () -> jwtValidator.validateToken(badAccessToken));
     }
 
     @Test
@@ -84,7 +86,7 @@ class JwtValidatorTest {
         TokenDto tokenDto = authService.login(loginDto);
         authService.logout("Bearer " + tokenDto.getAccessToken());
 
-        assertThat(jwtValidator.validateAccessToken(tokenDto.getAccessToken())).isFalse();
+        assertThrows(InvalidTokenRequestException.class, () -> jwtValidator.validateAccessToken(tokenDto.getAccessToken()));
     }
 
     @Test
@@ -98,7 +100,7 @@ class JwtValidatorTest {
 
         String accessToken = jwtTokenProvider.createTokenWithSeconds(authentication, false, 0L);
 
-        assertThat(jwtValidator.validateToken(accessToken)).isFalse();
+        assertThrows(InvalidTokenRequestException.class, () -> jwtValidator.validateAccessToken(accessToken));
     }
 
     @Test
@@ -119,7 +121,7 @@ class JwtValidatorTest {
         TokenDto tokenDto = authService.login(loginDto);
         String badRefreshToken = tokenDto.getRefreshToken() + "bad";
 
-        assertThat(jwtValidator.validateRefreshToken(badRefreshToken)).isFalse();
+        assertThrows(InvalidTokenRequestException.class, () -> jwtValidator.validateRefreshToken(badRefreshToken));
     }
 
     @Test
@@ -130,7 +132,8 @@ class JwtValidatorTest {
         TokenDto tokenDto = authService.login(loginDto);
         authService.logout("Bearer " + tokenDto.getAccessToken());
 
-        assertThat(jwtValidator.validateRefreshToken(tokenDto.getRefreshToken())).isFalse();
+        assertThrows(InvalidTokenRequestException.class,
+                () -> jwtValidator.validateRefreshToken(tokenDto.getRefreshToken()));
     }
 
     @Test
@@ -143,7 +146,7 @@ class JwtValidatorTest {
 
         String refreshToken = jwtTokenProvider.createTokenWithSeconds(authentication, true, 0L);
 
-        assertThat(jwtValidator.validateRefreshToken(refreshToken)).isFalse();
+        assertThrows(InvalidTokenRequestException.class, () -> jwtValidator.validateRefreshToken(refreshToken));
     }
 
     @Test
