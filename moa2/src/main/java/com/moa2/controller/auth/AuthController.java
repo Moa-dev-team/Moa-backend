@@ -84,4 +84,11 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
                 .body("refresh success");
     }
+
+    @GetMapping("/test-admin")
+    public ResponseEntity testAdmin(@RequestHeader("Authorization") String accessTokenInHeader) {
+        Long memberId = authService.getMemberId(accessTokenInHeader);
+        String memberInfo = memberService.getMemberInfo(memberId);
+        return ResponseEntity.ok().body(memberInfo);
+    }
 }
