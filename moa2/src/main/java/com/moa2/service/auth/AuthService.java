@@ -1,6 +1,7 @@
 package com.moa2.service.auth;
 
 import com.moa2.dto.auth.LoginDto;
+import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.jwt.JwtValidator;
 import com.moa2.dto.auth.TokenDto;
@@ -36,18 +37,15 @@ public class AuthService {
 
     public void logout(String accessTokenInHeader) {
         String accessToken = resolveToken(accessTokenInHeader);
-        if (!jwtValidator.validateAccessToken(accessToken)) {
-            throw new IllegalArgumentException("Invalid token");
-        }
+        jwtValidator.validateAccessToken(accessToken);
+
         String refreshToken = accessTokenService.getAccessToken(accessToken);
         accessTokenService.deleteAccessToken(accessToken);
         refreshTokenService.deleteRefreshToken(refreshToken);
     }
 
     public TokenDto refresh(String refreshToken) {
-        if (!jwtValidator.validateRefreshToken(refreshToken)) {
-            throw new IllegalArgumentException("Invalid token");
-        }
+        jwtValidator.validateRefreshToken(refreshToken);
 
         Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
 
@@ -59,9 +57,7 @@ public class AuthService {
 
 
     public Long getMemberId(String accessTokenInHeader) {
-        if (!jwtValidator.validateAccessToken(resolveToken(accessTokenInHeader))) {
-            throw new IllegalArgumentException("Invalid token");
-        }
+        jwtValidator.validateAccessToken(resolveToken(accessTokenInHeader));
         String accessToken = resolveToken(accessTokenInHeader);
         Long memberId = jwtTokenProvider.getClaims(accessToken).get("memberId", Long.class);
         return memberId;
@@ -71,7 +67,7 @@ public class AuthService {
         if (accessTokenInHeader != null && accessTokenInHeader.startsWith("Bearer ")) {
             return accessTokenInHeader.substring(7);
         } else {
-            throw new IllegalArgumentException("Invalid token");
+            throw new InvalidTokenRequestException("JWT", accessTokenInHeader, "Invalid Bearer Format.");
         }
     }
 }

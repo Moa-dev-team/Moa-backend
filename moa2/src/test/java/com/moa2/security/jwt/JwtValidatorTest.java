@@ -4,11 +4,10 @@ import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.LoginDto;
 import com.moa2.dto.auth.SignupDto;
 import com.moa2.dto.auth.TokenDto;
-import com.moa2.exception.InvalidTokenRequestException;
+import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.repository.member.MemberRepository;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ class JwtValidatorTest {
         loginDto.setEmail("test@example.com");
         loginDto.setPassword("password");
         TokenDto tokenDto = authService.login(loginDto);
-        
+
         assertThat(jwtValidator.validateAccessToken(tokenDto.getAccessToken())).isTrue();
     }
 

@@ -1,4 +1,4 @@
-package com.moa2.exception;
+package com.moa2.exception.jwt;
 
 public class InvalidTokenRequestException extends RuntimeException {
 

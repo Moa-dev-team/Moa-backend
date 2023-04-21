@@ -1,6 +1,6 @@
 package com.moa2.security.jwt;
 
-import com.moa2.exception.InvalidTokenRequestException;
+import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.service.auth.AccessTokenService;
 import com.moa2.service.auth.RefreshTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
