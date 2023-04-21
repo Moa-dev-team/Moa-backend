@@ -30,7 +30,7 @@ public class MemberService {
     private void validateDuplicateMember(Member member) {
         memberRepository.findByEmail(member.getEmail())
                 .ifPresent(m -> {
-                    throw new IllegalStateException("already exist email");
+                    throw new IllegalArgumentException("already exist email");
                 });
     }
 
