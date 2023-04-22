@@ -23,16 +23,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity register(@Valid @RequestBody SignupDto signupDto) {
         Member user = memberService.createUser(signupDto);
-
-        ResponseEntity responseEntity = null;
-        try {
-            memberService.register(user);
-            responseEntity = new ResponseEntity("registration success", HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            responseEntity = new ResponseEntity("registration fail : " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        return responseEntity;
+        memberService.register(user);
+        return new ResponseEntity("registration success", HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -83,5 +75,12 @@ public class AuthController {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
                 .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
                 .body("refresh success");
+    }
+
+    @GetMapping("/test-admin")
+    public ResponseEntity testAdmin(@RequestHeader("Authorization") String accessTokenInHeader) {
+        Long memberId = authService.getMemberId(accessTokenInHeader);
+        String memberInfo = memberService.getMemberInfo(memberId);
+        return ResponseEntity.ok().body(memberInfo);
     }
 }

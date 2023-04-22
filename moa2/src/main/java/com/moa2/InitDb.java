@@ -1,6 +1,7 @@
 package com.moa2;
 
 import com.moa2.domain.member.Authority;
+import com.moa2.domain.member.Member;
 import com.moa2.repository.member.AuthorityRepository;
 import com.moa2.service.member.MemberService;
 import jakarta.annotation.PostConstruct;
@@ -23,12 +24,20 @@ public class InitDb {
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
-        private final MemberService memberService;
         private final AuthorityRepository authorityRepository;
-        private final PasswordEncoder encoder;
+        private final MemberService memberService;
+        private final PasswordEncoder passwordEncoder;
         public void dbInit() {
             authorityRepository.save(new Authority("ROLE_USER"));
             authorityRepository.save(new Authority("ROLE_ADMIN"));
+
+            Member member = new Member();
+            member.setNickname("admin");
+            member.setEmail("123@com");
+            member.setPassword(passwordEncoder.encode("1111"));
+            member.getAuthorities().add(authorityRepository.findByName("ROLE_ADMIN"));
+            member.getAuthorities().add(authorityRepository.findByName("ROLE_USER"));
+            memberService.register(member);
         }
     }
 }

@@ -3,10 +3,8 @@ package com.moa2.service.auth;
 import com.moa2.repository.redis.RedisRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class RefreshTokenService {
     private final RedisRepository redisRepository;
 

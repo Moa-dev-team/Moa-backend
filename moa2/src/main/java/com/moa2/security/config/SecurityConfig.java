@@ -29,7 +29,6 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtFilter jwtFilter;
-
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.cors().configurationSource(new CorsConfigurationSource() {
@@ -49,6 +48,8 @@ public class SecurityConfig {
 
         http
                 .csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable()
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
@@ -62,8 +63,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("api/auth/register", "api/auth/login", "api/auth/refresh").permitAll()
+                .requestMatchers("api/auth/test-admin").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("api/auth/mypage").hasAuthority("ROLE_USER")
+                .requestMatchers("api/auth/register", "api/auth/login", "api/auth/refresh").permitAll()
                 .anyRequest().authenticated();
 
         return http.build();

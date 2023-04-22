@@ -1,6 +1,7 @@
 package com.moa2.service.auth;
 
 import com.moa2.dto.auth.LoginDto;
+import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.jwt.JwtValidator;
 import com.moa2.dto.auth.TokenDto;
@@ -12,12 +13,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AuthService {
 
     private final RefreshTokenService refreshTokenService;
@@ -26,7 +25,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtValidator jwtValidator;
 
-    @Transactional
     public TokenDto login(@Valid LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -37,22 +35,17 @@ public class AuthService {
         return jwtTokenProvider.createTokens(authentication);
     }
 
-    @Transactional
     public void logout(String accessTokenInHeader) {
         String accessToken = resolveToken(accessTokenInHeader);
-        if (!jwtValidator.validateAccessToken(accessToken)) {
-            throw new IllegalArgumentException("Invalid token");
-        }
+        jwtValidator.validateAccessToken(accessToken);
+
         String refreshToken = accessTokenService.getAccessToken(accessToken);
         accessTokenService.deleteAccessToken(accessToken);
         refreshTokenService.deleteRefreshToken(refreshToken);
     }
 
-    @Transactional
     public TokenDto refresh(String refreshToken) {
-        if (!jwtValidator.validateRefreshToken(refreshToken)) {
-            throw new IllegalArgumentException("Invalid token");
-        }
+        jwtValidator.validateRefreshToken(refreshToken);
 
         Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
 
@@ -64,9 +57,7 @@ public class AuthService {
 
 
     public Long getMemberId(String accessTokenInHeader) {
-        if (!jwtValidator.validateAccessToken(resolveToken(accessTokenInHeader))) {
-            throw new IllegalArgumentException("Invalid token");
-        }
+        jwtValidator.validateAccessToken(resolveToken(accessTokenInHeader));
         String accessToken = resolveToken(accessTokenInHeader);
         Long memberId = jwtTokenProvider.getClaims(accessToken).get("memberId", Long.class);
         return memberId;
@@ -76,7 +67,7 @@ public class AuthService {
         if (accessTokenInHeader != null && accessTokenInHeader.startsWith("Bearer ")) {
             return accessTokenInHeader.substring(7);
         } else {
-            throw new IllegalArgumentException("Invalid token");
+            throw new InvalidTokenRequestException("JWT", accessTokenInHeader, "Invalid Bearer Format.");
         }
     }
 }

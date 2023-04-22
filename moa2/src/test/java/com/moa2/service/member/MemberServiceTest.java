@@ -64,7 +64,7 @@ class MemberServiceTest {
 
         memberService.register(user);
 
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             memberService.register(user);
         });
 

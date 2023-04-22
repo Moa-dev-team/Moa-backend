@@ -1,10 +1,12 @@
 package com.moa2.security.jwt;
 
+import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.service.auth.AccessTokenService;
 import com.moa2.service.auth.RefreshTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,35 +22,37 @@ public class JwtValidator {
     public boolean validateToken(String authToken) {
         try {
             jwtTokenProvider.getClaims(authToken);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT signature.");
-            log.trace("Invalid JWT signature trace: {}", e);
+        } catch (SignatureException e) {
+            log.error("Invalid JWT signature.");
+            throw new InvalidTokenRequestException("JWT", authToken, "Invalid JWT signature.");
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token.");
+            throw new InvalidTokenRequestException("JWT", authToken, "Invalid JWT token.");
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
-            log.trace("Expired JWT token trace: {}", e);
+            log.error("Expired JWT token.");
+            throw new InvalidTokenRequestException("JWT", authToken, "Expired JWT token.");
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT token.");
-            log.trace("Unsupported JWT token trace: {}", e);
+            log.error("Unsupported JWT token.");
+            throw new InvalidTokenRequestException("JWT", authToken, "Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT token compact of handler are invalid.");
-            log.trace("JWT token compact of handler are invalid trace: {}", e);
+            log.error("JWT claims string is empty.");
+            throw new InvalidTokenRequestException("JWT", authToken, "JWT claims string is empty.");
         }
-        return false;
+        return true;
     }
 
     public boolean validateRefreshToken(String refreshToken) {
-        if (!validateToken(refreshToken) ||
-                !refreshTokenService.isExistRefreshToken(refreshToken)) {
-            return false;
+        validateToken(refreshToken);
+        if (!refreshTokenService.isExistRefreshToken(refreshToken)) {
+            throw new InvalidTokenRequestException("JWT", refreshToken, "Refresh token is expired or deleted.");
         }
         return true;
     }
 
     public boolean validateAccessToken(String accessToken) {
-        // AT는 filter 에서 validateToken 을 이미 통과함
+        validateToken(accessToken);
         if (!accessTokenService.isExistAccessToken(accessToken)) {
-            return false;
+            throw new InvalidTokenRequestException("JWT", accessToken, "Access token is expired or deleted.");
         }
         return true;
     }

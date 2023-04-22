@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.util.Collection;
@@ -88,8 +87,6 @@ public class JwtTokenProvider implements InitializingBean {
         return new TokenDto(accessToken, refreshToken);
     }
 
-
-    @Transactional
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
 
