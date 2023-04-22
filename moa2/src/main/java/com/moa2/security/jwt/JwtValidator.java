@@ -44,7 +44,7 @@ public class JwtValidator {
     public boolean validateRefreshToken(String refreshToken) {
         validateToken(refreshToken);
         if (!refreshTokenService.isExistRefreshToken(refreshToken)) {
-            throw new InvalidTokenRequestException("JWT", refreshToken, "Invalid refresh token.");
+            throw new InvalidTokenRequestException("JWT", refreshToken, "Refresh token is expired or deleted.");
         }
         return true;
     }
@@ -52,7 +52,7 @@ public class JwtValidator {
     public boolean validateAccessToken(String accessToken) {
         validateToken(accessToken);
         if (!accessTokenService.isExistAccessToken(accessToken)) {
-            throw new InvalidTokenRequestException("JWT", accessToken, "Invalid access token.");
+            throw new InvalidTokenRequestException("JWT", accessToken, "Access token is expired or deleted.");
         }
         return true;
     }
