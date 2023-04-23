@@ -1,6 +1,7 @@
 package com.moa2.exception;
 
 import com.moa2.exception.jwt.InvalidTokenRequestException;
+import com.moa2.exception.oauth.OAuth2AuthenticationProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,14 +15,17 @@ public class GlobalExceptionHandler {
     // 400
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
-    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<Object> handleBadRequestException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     // 401
-    @ExceptionHandler({InvalidTokenRequestException.class, BadCredentialsException.class})
+    @ExceptionHandler({
+            InvalidTokenRequestException.class,
+            BadCredentialsException.class,
+            OAuth2AuthenticationProcessingException.class})
     @ResponseBody
-    public ResponseEntity<Object> handleIllegalArgumentException(InvalidTokenRequestException ex) {
+    public ResponseEntity<Object> handleUnAuthorizedException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
