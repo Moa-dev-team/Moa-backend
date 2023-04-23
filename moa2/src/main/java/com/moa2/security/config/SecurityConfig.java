@@ -63,10 +63,14 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("api/auth/test-admin").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("api/auth/mypage").hasAuthority("ROLE_USER")
-                .requestMatchers("api/auth/register", "api/auth/login", "api/auth/refresh").permitAll()
-                .anyRequest().authenticated();
+                .requestMatchers("api/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("api/user/**").hasAuthority("ROLE_USER")
+                .requestMatchers("api/auth/**").permitAll()
+                .anyRequest().authenticated()
+
+                .and()
+                .oauth2Login();
+
 
         return http.build();
     }

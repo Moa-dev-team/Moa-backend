@@ -55,13 +55,6 @@ public class AuthController {
                 .body("logout success");
     }
 
-    @GetMapping("/mypage")
-    public ResponseEntity mypage(@RequestHeader("Authorization") String accessTokenInHeader) {
-        Long memberId = authService.getMemberId(accessTokenInHeader);
-        String memberInfo = memberService.getMemberInfo(memberId);
-        return ResponseEntity.ok().body(memberInfo);
-    }
-
     @GetMapping("/refresh")
     public ResponseEntity refresh(@CookieValue String refreshToken) {
         TokenDto tokenDto = authService.refresh(refreshToken);
@@ -77,10 +70,5 @@ public class AuthController {
                 .body("refresh success");
     }
 
-    @GetMapping("/test-admin")
-    public ResponseEntity testAdmin(@RequestHeader("Authorization") String accessTokenInHeader) {
-        Long memberId = authService.getMemberId(accessTokenInHeader);
-        String memberInfo = memberService.getMemberInfo(memberId);
-        return ResponseEntity.ok().body(memberInfo);
-    }
+
 }
