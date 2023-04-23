@@ -2,6 +2,17 @@ spring:
   security:
     filter:
       dispatcher-types: request
+    oauth2:
+      client:
+        registration:
+          github :
+            client-id: d0797abc068a3693fe26
+            client-secret: e79d87694a09d16d6870644750e59aee26b0fe89
+            redirect-uri: "{baseUrl}/login/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/moa2?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
