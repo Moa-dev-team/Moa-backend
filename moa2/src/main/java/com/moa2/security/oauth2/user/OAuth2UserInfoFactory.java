@@ -11,6 +11,8 @@ public class OAuth2UserInfoFactory {
             return new GithubOAuth2UserInfo(attributes);
         }else if (registrationId.equalsIgnoreCase(AuthProvider.google.toString())) {
             return new GoogleOAuth2UserInfo(attributes);
+        }else if (registrationId.equalsIgnoreCase(AuthProvider.naver.toString())) {
+            return new NaverOAuth2UserInfo(attributes);
         }else {
             throw new OAuth2AuthenticationProcessingException("Sorry! Login with " + registrationId + " is not supported yet.");
         }
