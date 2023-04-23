@@ -11,7 +11,7 @@ public class RefreshTokenService {
     private final long refreshTokenValidityInSeconds;
 
     public RefreshTokenService(RedisRepository redisRepository,
-                               @Value("${jwt.refresh-token-validity-in-seconds}")
+                               @Value("${app.jwt.refresh-token-validity-in-seconds}")
                                long refreshTokenValidityInSeconds) {
         this.redisRepository = redisRepository;
         this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds;

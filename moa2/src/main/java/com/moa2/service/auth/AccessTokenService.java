@@ -10,7 +10,7 @@ public class AccessTokenService {
     private final long accessTokenValidityInSeconds;
 
     public AccessTokenService(RedisRepository redisRepository,
-                              @Value("${jwt.access-token-validity-in-seconds}")
+                              @Value("${app.jwt.access-token-validity-in-seconds}")
                               long accessTokenValidityInSeconds) {
         this.redisRepository = redisRepository;
         this.accessTokenValidityInSeconds = accessTokenValidityInSeconds;

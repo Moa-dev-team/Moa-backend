@@ -3,6 +3,9 @@ package com.moa2.security.config;
 import com.moa2.security.jwt.JwtFilter;
 import com.moa2.security.jwt.exception.JwtAccessDeniedHandler;
 import com.moa2.security.jwt.exception.JwtAuthenticationEntryPoint;
+import com.moa2.security.oauth2.CustomOAuth2UserService;
+import com.moa2.security.oauth2.OAuth2AuthenticationFailureHandler;
+import com.moa2.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +32,9 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtFilter jwtFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.cors().configurationSource(new CorsConfigurationSource() {
@@ -52,9 +58,9 @@ public class SecurityConfig {
                 .formLogin().disable()
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+                    .exceptionHandling()
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
 
                 // create no session
                 .and()
@@ -63,10 +69,10 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("admin/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("user/**").hasAuthority("ROLE_USER")
-                .requestMatchers("auth/**", "oauth/**").permitAll()
-                .anyRequest().authenticated()
+                    .requestMatchers("admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("user/**").hasAuthority("ROLE_USER")
+                    .requestMatchers("auth/**", "oauth/**", "logout", "/").permitAll()
+                    .anyRequest().authenticated()
 
                 .and()
                 .oauth2Login()
@@ -75,8 +81,12 @@ public class SecurityConfig {
                         .and()
                     .redirectionEndpoint()
                         .baseUri("/oauth2/callback/*")
-                        .and();
-
+                        .and()
+                .userInfoEndpoint()
+                    .userService(customOAuth2UserService)
+                    .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
 
         return http.build();
     }

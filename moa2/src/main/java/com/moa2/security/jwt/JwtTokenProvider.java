@@ -37,9 +37,9 @@ public class JwtTokenProvider implements InitializingBean {
     private final MemberRepository memberRepository;
 
     public JwtTokenProvider(
-            @Value("${jwt.secret}") String secret, // hmac 암호화를 사용하므로 32bit 를 넘어야한다.
-            @Value("${jwt.access-token-validity-in-seconds}") long tokenValidTime,
-            @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidTime,
+            @Value("${app.jwt.secret}") String secret, // hmac 암호화를 사용하므로 32bit 를 넘어야한다.
+            @Value("${app.jwt.access-token-validity-in-seconds}") long tokenValidTime,
+            @Value("${app.jwt.refresh-token-validity-in-seconds}") long refreshTokenValidTime,
             RefreshTokenService refreshTokenService,
             AccessTokenService accessTokenService,
             MemberRepository memberRepository) {
