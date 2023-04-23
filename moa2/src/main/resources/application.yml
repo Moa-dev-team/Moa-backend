@@ -12,6 +12,13 @@ spring:
             scope:
               - user:email
               - read:user
+          google :
+            client-id: 152773267174-t42hi5dpk4pulm7ljssnf331itoipgck.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - profile
+              - email
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
