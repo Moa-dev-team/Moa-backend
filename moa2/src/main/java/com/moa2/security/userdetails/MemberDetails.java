@@ -34,6 +34,12 @@ public class MemberDetails implements OAuth2User, UserDetails {
         this.attributes = attributes;
     }
 
+    public static MemberDetails createWithAttributes(Member member, Map<String, Object> attributes) {
+        MemberDetails memberDetails = new MemberDetails(member);
+        memberDetails.setAttributes(attributes);
+        return memberDetails;
+    }
+
     // UserDetails
 
     @Override

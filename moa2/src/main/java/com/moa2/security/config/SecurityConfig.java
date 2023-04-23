@@ -65,11 +65,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("user/**").hasAuthority("ROLE_USER")
-                .requestMatchers("auth/**").permitAll()
+                .requestMatchers("auth/**", "oauth/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
-                .oauth2Login();
+                .oauth2Login()
+                    .authorizationEndpoint()
+                        .baseUri("/oauth2/authorize")
+                        .and()
+                    .redirectionEndpoint()
+                        .baseUri("/oauth2/callback/*")
+                        .and();
 
 
         return http.build();
