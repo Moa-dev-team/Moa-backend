@@ -63,9 +63,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("api/admin/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("api/user/**").hasAuthority("ROLE_USER")
-                .requestMatchers("api/auth/**").permitAll()
+                .requestMatchers("admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("user/**").hasAuthority("ROLE_USER")
+                .requestMatchers("auth/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
