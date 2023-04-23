@@ -1,6 +1,10 @@
 package com.moa2.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.moa2.security.oauth2.AuthProvider;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,12 +19,26 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+//    @Column(nullable = false)
     private String nickname;
 
+//    @Email
     @Column(unique = true)
     private String email;
 
+    @JsonIgnore
     private String password;
+
+    private String imageUrl;
+
+//    @Column(nullable = false)
+//    private Boolean emailVerified = false;
+
+//    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+    private String providerId;
+
 
     @ManyToMany
     @JoinTable(name = "member_authority",
