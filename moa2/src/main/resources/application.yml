@@ -33,7 +33,13 @@ spring:
       host: localhost
       port: 6379
 
-jwt:
-  secret: "ddhjfkafdshjlflhjdas3288998ksjkskj28kjas829uaw892jsa28jdska289kj289jdak28"
-  access-token-validity-in-seconds: 43200 # 12 hours
-  refresh-token-validity-in-seconds: 604800 # 1 week
+app:
+  jwt:
+    secret: "ddhjfkafdshjlflhjdas3288998ksjkskj28kjas829uaw89242kl4jk12j6jk1jjjsa28jdska289kj289jdak282313212412312"
+    access-token-validity-in-seconds: 43200 # 12 hours
+    refresh-token-validity-in-seconds: 604800 # 1 week
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
