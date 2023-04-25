@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -45,7 +46,7 @@ public class SecurityConfig {
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setAllowedHeaders(Collections.singletonList("*"));
                 config.setAllowCredentials(true);
-                config.setExposedHeaders(Arrays.asList("Authorization")); // custom header 이므로 세팅에 추가
+                config.setExposedHeaders(List.of("Authorization")); // custom header 이므로 세팅에 추가
                 config.setMaxAge(3600L);
                 return config;
             }
@@ -72,6 +73,25 @@ public class SecurityConfig {
                     .requestMatchers("admin/**").hasAuthority("ROLE_ADMIN")
                     .requestMatchers("user/**").hasAuthority("ROLE_USER")
                     .requestMatchers("auth/**", "oauth/**", "logout", "/").permitAll()
+                    .requestMatchers("/",
+                            "/favicon.ico",
+                            "/**/*.json",
+                            "/**/*.xml",
+                            "/**/*.properties",
+                            "/**/*.woff2",
+                            "/**/*.woff",
+                            "/**/*.ttf",
+                            "/**/*.ttc",
+                            "/**/*.ico",
+                            "/**/*.bmp",
+                            "/**/*.png",
+                            "/**/*.gif",
+                            "/**/*.svg",
+                            "/**/*.jpg",
+                            "/**/*.jpeg",
+                            "/**/*.html",
+                            "/**/*.css",
+                            "/**/*.js").permitAll()
                     .anyRequest().authenticated()
 
                 .and()

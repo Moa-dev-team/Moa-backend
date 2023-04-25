@@ -1,7 +1,5 @@
 spring:
   security:
-    filter:
-      dispatcher-types: request
     oauth2:
       client:
         registration:
