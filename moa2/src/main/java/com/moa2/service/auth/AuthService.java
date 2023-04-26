@@ -56,7 +56,7 @@ public class AuthService {
     }
 
 
-    public Long getMemberIdInAccessTokenInBearer(String accessTokenInBearer) {
+    public Long getMemberIdInBearerAccessToken(String accessTokenInBearer) {
         String accessToken = resolveToken(accessTokenInBearer);
         return getMemberIdInAccessToken(accessToken);
     }

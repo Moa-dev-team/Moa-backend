@@ -19,7 +19,7 @@ public class UserController {
     private final MemberService memberService;
     @GetMapping("/mypage")
     public ResponseEntity mypage(@RequestHeader("Authorization") String accessTokenInHeader) {
-        Long memberId = authService.getMemberIdInAccessTokenInBearer(accessTokenInHeader);
+        Long memberId = authService.getMemberIdInBearerAccessToken(accessTokenInHeader);
         String memberInfo = memberService.getMemberInfo(memberId);
         return ResponseEntity.ok().body(memberInfo);
     }
