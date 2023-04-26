@@ -1,4 +1,4 @@
-package com.moa2.security.config;
+package com.moa2.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;

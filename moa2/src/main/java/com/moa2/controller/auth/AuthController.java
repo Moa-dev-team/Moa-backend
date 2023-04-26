@@ -4,17 +4,14 @@ import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.request.LoginDto;
 import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.auth.TokenDto;
-import com.moa2.dto.auth.response.TokenResponseDto;
+import com.moa2.dto.auth.response.ResponseTokenDto;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
@@ -73,6 +70,6 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new TokenResponseDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));
+                .body(new ResponseTokenDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));
     }
 }

@@ -1,4 +1,4 @@
-package com.moa2.security.config;
+package com.moa2.config;
 
 import com.moa2.security.jwt.JwtFilter;
 import com.moa2.security.jwt.exception.JwtAccessDeniedHandler;
@@ -55,58 +55,58 @@ public class SecurityConfig {
 
 
         http
-                .csrf().disable()
+            .csrf().disable()
 
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                    .exceptionHandling()
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                    .accessDeniedHandler(jwtAccessDeniedHandler)
 
-                // create no session
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            // create no session
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                .and()
-                .authorizeHttpRequests()
-                    .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                    .requestMatchers("/user/**").hasAuthority("ROLE_USER")
-                    .requestMatchers("/auth/**", "/oauth/**").permitAll()
-                    .requestMatchers("/",
-                            "/favicon.ico",
-                            "/**/*.json",
-                            "/**/*.xml",
-                            "/**/*.properties",
-                            "/**/*.woff2",
-                            "/**/*.woff",
-                            "/**/*.ttf",
-                            "/**/*.ttc",
-                            "/**/*.ico",
-                            "/**/*.bmp",
-                            "/**/*.png",
-                            "/**/*.gif",
-                            "/**/*.svg",
-                            "/**/*.jpg",
-                            "/**/*.jpeg",
-                            "/**/*.html",
-                            "/**/*.css",
-                            "/**/*.js").permitAll()
-                    .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                    .anyRequest().authenticated()
+            .and()
+            .authorizeHttpRequests()
+                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/user/**").hasAuthority("ROLE_USER")
+                .requestMatchers("/auth/**", "/oauth/**").permitAll()
+                .requestMatchers("/",
+                        "/favicon.ico",
+                        "/**/*.json",
+                        "/**/*.xml",
+                        "/**/*.properties",
+                        "/**/*.woff2",
+                        "/**/*.woff",
+                        "/**/*.ttf",
+                        "/**/*.ttc",
+                        "/**/*.ico",
+                        "/**/*.bmp",
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",
+                        "/**/*.jpeg",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js").permitAll()
+                .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated()
 
-                .and()
-                .oauth2Login()
-                    .authorizationEndpoint()
-                        .baseUri("/oauth2/authorize")
-                        .and()
-                    .redirectionEndpoint()
-                        .baseUri("/oauth2/callback/*")
-                        .and()
-                .userInfoEndpoint()
-                    .userService(customOAuth2UserService)
+            .and()
+            .oauth2Login()
+                .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
                     .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+                .redirectionEndpoint()
+                    .baseUri("/oauth2/callback/*")
+                    .and()
+            .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
+            .successHandler(oAuth2AuthenticationSuccessHandler)
+            .failureHandler(oAuth2AuthenticationFailureHandler);
 
         return http.build();
     }
