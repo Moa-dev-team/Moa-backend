@@ -36,22 +36,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginDto loginDto) {
         TokenDto tokenDto = authService.login(loginDto);
-
-        Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
-        Long expirationTimeInAccessToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
-        Long expirationTimeInRefreshToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
-
-        HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .path("/")
-                .maxAge(expirationTimeInRefreshToken)
-//                .secure(true)
-                .httpOnly(true)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new TokenResponseDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));
+        return CreateTokenDtoResponse(tokenDto);
     }
 
     @GetMapping("/logout")
@@ -70,7 +55,10 @@ public class AuthController {
     @GetMapping("/refresh")
     public ResponseEntity refresh(@CookieValue String refreshToken) {
         TokenDto tokenDto = authService.refresh(refreshToken);
+        return CreateTokenDtoResponse(tokenDto);
+    }
 
+    private ResponseEntity CreateTokenDtoResponse(TokenDto tokenDto) {
         Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
         Long expirationTimeInAccessToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
         Long expirationTimeInRefreshToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
@@ -85,5 +73,6 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new TokenResponseDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));    }
+                .body(new TokenResponseDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));
+    }
 }
