@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,8 +56,6 @@ public class SecurityConfig {
 
         http
                 .csrf().disable()
-                .httpBasic().disable()
-                .formLogin().disable()
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .exceptionHandling()
@@ -70,9 +69,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                    .requestMatchers("admin/**").hasAuthority("ROLE_ADMIN")
-                    .requestMatchers("user/**").hasAuthority("ROLE_USER")
-                    .requestMatchers("auth/**", "oauth/**", "logout", "/").permitAll()
+                    .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/user/**").hasAuthority("ROLE_USER")
+                    .requestMatchers("/auth/**", "/oauth/**").permitAll()
                     .requestMatchers("/",
                             "/favicon.ico",
                             "/**/*.json",
@@ -92,6 +91,7 @@ public class SecurityConfig {
                             "/**/*.html",
                             "/**/*.css",
                             "/**/*.js").permitAll()
+                    .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
 
                 .and()
@@ -120,5 +120,10 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers( "/swagger-ui/**", "/v3/api-docs/**");
     }
 }
