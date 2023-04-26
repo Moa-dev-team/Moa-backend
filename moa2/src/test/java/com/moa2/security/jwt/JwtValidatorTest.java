@@ -1,8 +1,8 @@
 package com.moa2.security.jwt;
 
 import com.moa2.domain.member.Member;
-import com.moa2.dto.auth.LoginDto;
-import com.moa2.dto.auth.SignupDto;
+import com.moa2.dto.auth.request.LoginDto;
+import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.auth.TokenDto;
 import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.repository.member.MemberRepository;

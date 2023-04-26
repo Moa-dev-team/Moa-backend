@@ -1,8 +1,8 @@
 package com.moa2.controller.auth;
 
 import com.moa2.domain.member.Member;
-import com.moa2.dto.auth.LoginDto;
-import com.moa2.dto.auth.SignupDto;
+import com.moa2.dto.auth.request.LoginDto;
+import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.auth.TokenDto;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,6 +37,8 @@ public class AuthController {
                 // https 에서만 데이터를 보내므로 잠시 주석처리
 //                .secure(true)
                 .build();
+
+
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())

@@ -1,6 +1,6 @@
 package com.moa2.service.auth;
 
-import com.moa2.dto.auth.LoginDto;
+import com.moa2.dto.auth.request.LoginDto;
 import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.jwt.JwtValidator;
@@ -56,12 +56,17 @@ public class AuthService {
     }
 
 
-    public Long getMemberId(String accessTokenInHeader) {
+    public Long getMemberIdInAccessToken(String accessTokenInHeader) {
         jwtValidator.validateAccessToken(resolveToken(accessTokenInHeader));
 
         String accessToken = resolveToken(accessTokenInHeader);
         Long memberId = jwtTokenProvider.getClaims(accessToken).get("memberId", Long.class);
         return memberId;
+    }
+
+    public Long getExpirationTimeInMilliSeconds(String jwt) {
+        jwtValidator.validateToken(jwt);
+        return jwtTokenProvider.getClaims(jwt).getExpiration().getTime();
     }
 
     private String resolveToken(String accessTokenInHeader) {

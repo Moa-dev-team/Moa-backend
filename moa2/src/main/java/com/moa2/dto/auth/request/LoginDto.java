@@ -1,4 +1,4 @@
-package com.moa2.dto.auth;
+package com.moa2.dto.auth.request;
 
 import lombok.Data;
 

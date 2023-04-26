@@ -1,7 +1,7 @@
 package com.moa2.service.member;
 
 import com.moa2.domain.member.Member;
-import com.moa2.dto.auth.SignupDto;
+import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
