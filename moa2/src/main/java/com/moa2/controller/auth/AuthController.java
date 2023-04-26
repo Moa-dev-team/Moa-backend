@@ -4,12 +4,14 @@ import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.request.LoginDto;
 import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.auth.TokenDto;
+import com.moa2.dto.auth.response.TokenResponseDto;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -26,24 +28,32 @@ public class AuthController {
     public ResponseEntity register(@Valid @RequestBody SignupDto signupDto) {
         Member user = memberService.createUser(signupDto);
         memberService.register(user);
-        return new ResponseEntity("registration success", HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("register success");
     }
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginDto loginDto) {
         TokenDto tokenDto = authService.login(loginDto);
-        HttpCookie httpCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .httpOnly(true)
-                // https 에서만 데이터를 보내므로 잠시 주석처리
+
+        Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
+        Long expirationTimeInAccessToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
+        Long expirationTimeInRefreshToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+
+        HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .path("/")
+                .maxAge(expirationTimeInRefreshToken)
 //                .secure(true)
+                .httpOnly(true)
                 .build();
 
 
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
-                .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
-                .body("login success");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new TokenResponseDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));
     }
 
     @GetMapping("/logout")
@@ -63,16 +73,19 @@ public class AuthController {
     public ResponseEntity refresh(@CookieValue String refreshToken) {
         TokenDto tokenDto = authService.refresh(refreshToken);
 
-        HttpCookie httpCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .httpOnly(true)
+        Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
+        Long expirationTimeInAccessToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
+        Long expirationTimeInRefreshToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+
+        HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .path("/")
+                .maxAge(expirationTimeInRefreshToken)
 //                .secure(true)
+                .httpOnly(true)
                 .build();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
-                .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
-                .body("refresh success");
-    }
-
-
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new TokenResponseDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));    }
 }

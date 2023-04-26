@@ -56,13 +56,17 @@ public class AuthService {
     }
 
 
-    public Long getMemberIdInAccessToken(String accessTokenInHeader) {
-        jwtValidator.validateAccessToken(resolveToken(accessTokenInHeader));
-
-        String accessToken = resolveToken(accessTokenInHeader);
-        Long memberId = jwtTokenProvider.getClaims(accessToken).get("memberId", Long.class);
-        return memberId;
+    public Long getMemberIdInAccessTokenInBearer(String accessTokenInBearer) {
+        String accessToken = resolveToken(accessTokenInBearer);
+        return getMemberIdInAccessToken(accessToken);
     }
+
+    public Long getMemberIdInAccessToken(String accessToken) {
+        jwtValidator.validateAccessToken(accessToken);
+        return jwtTokenProvider.getClaims(accessToken).get("memberId", Long.class);
+    }
+
+
 
     public Long getExpirationTimeInMilliSeconds(String jwt) {
         jwtValidator.validateToken(jwt);

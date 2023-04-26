@@ -20,7 +20,7 @@ public class AdminController {
 
     @GetMapping("/test-admin")
     public ResponseEntity testAdmin(@RequestHeader("Authorization") String accessTokenInHeader) {
-        Long memberId = authService.getMemberIdInAccessToken(accessTokenInHeader);
+        Long memberId = authService.getMemberIdInAccessTokenInBearer(accessTokenInHeader);
         String memberInfo = memberService.getMemberInfo(memberId);
         return ResponseEntity.ok().body(memberInfo);
     }
