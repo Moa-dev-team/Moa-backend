@@ -47,7 +47,7 @@ public class SecurityConfig {
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setAllowedHeaders(Collections.singletonList("*"));
                 config.setAllowCredentials(true);
-                config.setExposedHeaders(List.of("Authorization")); // custom header 이므로 세팅에 추가
+                config.setExposedHeaders(List.of("Authorization")); // 사용할 header 이므로 추가
                 config.setMaxAge(3600L);
                 return config;
             }

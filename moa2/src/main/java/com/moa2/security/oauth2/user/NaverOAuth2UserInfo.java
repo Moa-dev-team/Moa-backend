@@ -4,12 +4,12 @@ import java.util.Map;
 
 public class NaverOAuth2UserInfo extends OAuth2UserInfo{
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {
-        super(attributes);
+        super((Map<String, Object>) attributes.get("response"));
     }
 
     @Override
     public String getId() {
-        return ((Integer) attributes.get("id")).toString();
+        return (String) attributes.get("id");
     }
 
     @Override
@@ -24,6 +24,6 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
 
     @Override
     public String getImageUrl() {
-        return (String) attributes.get("avatar_url");
+        return (String) attributes.get("profile_image");
     }
 }
