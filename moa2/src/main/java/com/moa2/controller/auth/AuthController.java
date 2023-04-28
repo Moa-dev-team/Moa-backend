@@ -57,12 +57,12 @@ public class AuthController {
 
     private ResponseEntity CreateTokenDtoResponse(TokenDto tokenDto) {
         Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
-        Long expirationTimeInAccessToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
-        Long expirationTimeInRefreshToken = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+        Long accessTokenExpirationInMilliSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
+        Long refreshTokenExpirationInSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                .maxAge(expirationTimeInRefreshToken)
+                .maxAge(refreshTokenExpirationInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
@@ -70,6 +70,6 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new ResponseTokenDto(tokenDto.getAccessToken(), memberId, expirationTimeInAccessToken));
+                .body(new ResponseTokenDto(tokenDto.getAccessToken(), memberId, accessTokenExpirationInMilliSeconds));
     }
 }

@@ -44,12 +44,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         TokenDto tokenDto = jwtTokenProvider.createTokens(authentication);
 
         Long memberId = jwtTokenProvider.getClaims(tokenDto.getAccessToken()).get("memberId", Long.class);
-        Long expirationTimeInAccessToken = jwtTokenProvider.getClaims(tokenDto.getAccessToken()).getExpiration().getTime();
-        Long expirationTimeInRefreshToken = jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime();
+        Long accessTokenExpirationInMilliSeconds =
+                jwtTokenProvider.getClaims(tokenDto.getAccessToken()).getExpiration().getTime();
+        Long refreshTokenExpirationInSeconds =
+                jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime()/1000;
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                .maxAge(expirationTimeInRefreshToken)
+                .maxAge(refreshTokenExpirationInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
@@ -59,7 +61,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         ResponseTokenDto responseTokenDto = new ResponseTokenDto(
                 tokenDto.getAccessToken(),
                 memberId,
-                expirationTimeInAccessToken
+                accessTokenExpirationInMilliSeconds
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
