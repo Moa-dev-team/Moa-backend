@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.sasl.AuthenticationException;
 import java.util.Optional;
 
 @Service
@@ -51,7 +50,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<Member> memberOptional = memberRepository.findByEmailEagerly(oAuth2UserInfo.getEmail());
+        Optional<Member> memberOptional = memberRepository.findByEmailEagerlyAuthorities(oAuth2UserInfo.getEmail());
         Member member;
 
         if (memberOptional.isPresent()) {
