@@ -6,11 +6,11 @@ import lombok.Data;
 public class ResponseTokenDto {
     String accessToken;
     Long memberId;
-    Long expirationTimeInMilliSeconds;
+    Long accessTokenExpirationInMilliSeconds;
 
-    public ResponseTokenDto(String accessToken, Long memberId, Long expirationTimeInMilliSeconds) {
+    public ResponseTokenDto(String accessToken, Long memberId, Long accessTokenExpirationInMilliSeconds) {
         this.accessToken = accessToken;
         this.memberId = memberId;
-        this.expirationTimeInMilliSeconds = expirationTimeInMilliSeconds;
+        this.accessTokenExpirationInMilliSeconds = accessTokenExpirationInMilliSeconds;
     }
 }
