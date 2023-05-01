@@ -4,7 +4,7 @@ import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.request.LoginDto;
 import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.auth.TokenDto;
-import com.moa2.dto.auth.response.ResponseTokenDto;
+import com.moa2.dto.auth.response.SuccessLoginResponseDto;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
 import jakarta.validation.Valid;
@@ -70,6 +70,6 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new ResponseTokenDto(tokenDto.getAccessToken(), memberId, accessTokenExpirationInMilliSeconds));
+                .body(new SuccessLoginResponseDto(tokenDto.getAccessToken(), memberId, accessTokenExpirationInMilliSeconds));
     }
 }

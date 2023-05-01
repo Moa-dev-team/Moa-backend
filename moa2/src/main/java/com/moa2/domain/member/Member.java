@@ -3,8 +3,6 @@ package com.moa2.domain.member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moa2.security.oauth2.AuthProvider;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +20,7 @@ public class Member {
 //    @Column(nullable = false)
     private String nickname;
 
-    private boolean isNew = true;
+    private boolean isFirstLogin = true;
     //    @Email
     @Column(unique = true)
     private String email;
