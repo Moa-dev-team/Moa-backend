@@ -22,7 +22,8 @@ public class Member {
 //    @Column(nullable = false)
     private String nickname;
 
-//    @Email
+    private boolean isNew = true;
+    //    @Email
     @Column(unique = true)
     private String email;
 
