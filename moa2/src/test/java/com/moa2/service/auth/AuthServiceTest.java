@@ -1,8 +1,8 @@
 package com.moa2.service.auth;
 
 import com.moa2.domain.member.Member;
-import com.moa2.dto.auth.LoginDto;
-import com.moa2.dto.auth.SignupDto;
+import com.moa2.dto.auth.request.LoginDto;
+import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.repository.member.MemberRepository;
 import com.moa2.repository.redis.RedisRepository;
 import com.moa2.security.jwt.JwtValidator;

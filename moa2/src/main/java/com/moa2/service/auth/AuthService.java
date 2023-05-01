@@ -1,6 +1,6 @@
 package com.moa2.service.auth;
 
-import com.moa2.dto.auth.LoginDto;
+import com.moa2.dto.auth.request.LoginDto;
 import com.moa2.exception.jwt.InvalidTokenRequestException;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.jwt.JwtValidator;
@@ -47,20 +47,30 @@ public class AuthService {
     public TokenDto refresh(String refreshToken) {
         jwtValidator.validateRefreshToken(refreshToken);
 
-        Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
-
         String accessToken = refreshTokenService.getRefreshToken(refreshToken);
         accessTokenService.deleteAccessToken(accessToken);
         refreshTokenService.deleteRefreshToken(refreshToken);
+
+        Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
         return jwtTokenProvider.createTokens(authentication);
     }
 
 
-    public Long getMemberId(String accessTokenInHeader) {
-        jwtValidator.validateAccessToken(resolveToken(accessTokenInHeader));
-        String accessToken = resolveToken(accessTokenInHeader);
-        Long memberId = jwtTokenProvider.getClaims(accessToken).get("memberId", Long.class);
-        return memberId;
+    public Long getMemberIdInBearerAccessToken(String accessTokenInBearer) {
+        String accessToken = resolveToken(accessTokenInBearer);
+        return getMemberIdInAccessToken(accessToken);
+    }
+
+    public Long getMemberIdInAccessToken(String accessToken) {
+        jwtValidator.validateAccessToken(accessToken);
+        return jwtTokenProvider.getClaims(accessToken).get("memberId", Long.class);
+    }
+
+
+
+    public Long getExpirationTimeInMilliSeconds(String jwt) {
+        jwtValidator.validateToken(jwt);
+        return jwtTokenProvider.getClaims(jwt).getExpiration().getTime();
     }
 
     private String resolveToken(String accessTokenInHeader) {

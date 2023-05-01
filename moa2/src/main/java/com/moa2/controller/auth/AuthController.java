@@ -1,9 +1,10 @@
 package com.moa2.controller.auth;
 
 import com.moa2.domain.member.Member;
-import com.moa2.dto.auth.LoginDto;
-import com.moa2.dto.auth.SignupDto;
+import com.moa2.dto.auth.request.LoginDto;
+import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.auth.TokenDto;
+import com.moa2.dto.auth.response.ResponseTokenDto;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
 import jakarta.validation.Valid;
@@ -13,7 +14,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
@@ -24,22 +25,15 @@ public class AuthController {
     public ResponseEntity register(@Valid @RequestBody SignupDto signupDto) {
         Member user = memberService.createUser(signupDto);
         memberService.register(user);
-        return new ResponseEntity("registration success", HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("register success");
     }
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginDto loginDto) {
         TokenDto tokenDto = authService.login(loginDto);
-        HttpCookie httpCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .httpOnly(true)
-                // https 에서만 데이터를 보내므로 잠시 주석처리
-//                .secure(true)
-                .build();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
-                .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
-                .body("login success");
+        return CreateTokenDtoResponse(tokenDto);
     }
 
     @GetMapping("/logout")
@@ -55,32 +49,27 @@ public class AuthController {
                 .body("logout success");
     }
 
-    @GetMapping("/mypage")
-    public ResponseEntity mypage(@RequestHeader("Authorization") String accessTokenInHeader) {
-        Long memberId = authService.getMemberId(accessTokenInHeader);
-        String memberInfo = memberService.getMemberInfo(memberId);
-        return ResponseEntity.ok().body(memberInfo);
-    }
-
     @GetMapping("/refresh")
     public ResponseEntity refresh(@CookieValue String refreshToken) {
         TokenDto tokenDto = authService.refresh(refreshToken);
-
-        HttpCookie httpCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .httpOnly(true)
-//                .secure(true)
-                .build();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
-                .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
-                .body("refresh success");
+        return CreateTokenDtoResponse(tokenDto);
     }
 
-    @GetMapping("/test-admin")
-    public ResponseEntity testAdmin(@RequestHeader("Authorization") String accessTokenInHeader) {
-        Long memberId = authService.getMemberId(accessTokenInHeader);
-        String memberInfo = memberService.getMemberInfo(memberId);
-        return ResponseEntity.ok().body(memberInfo);
+    private ResponseEntity CreateTokenDtoResponse(TokenDto tokenDto) {
+        Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
+        Long accessTokenExpirationInMilliSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
+        Long refreshTokenExpirationInSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+
+        HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .path("/")
+                .maxAge(refreshTokenExpirationInSeconds)
+//                .secure(true)
+                .httpOnly(true)
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new ResponseTokenDto(tokenDto.getAccessToken(), memberId, accessTokenExpirationInMilliSeconds));
     }
 }
