@@ -2,6 +2,7 @@ package com.moa2.security.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moa2.dto.auth.TokenDto;
+import com.moa2.dto.auth.response.FirstLoginResponseDto;
 import com.moa2.dto.auth.response.SuccessLoginResponseDto;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.userdetails.MemberDetails;
@@ -58,17 +59,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         SuccessLoginResponseDto successLoginResponseDto;
         if (memberDetails.getIsFirstLogin()) {
-            successLoginResponseDto = SuccessLoginResponseDto.CreateAboutFirstLogin(
+            successLoginResponseDto = new FirstLoginResponseDto(
                     tokenDto.getAccessToken(),
-                    memberId,
                     accessTokenExpirationInMilliSeconds,
-                    memberDetails.getImageUrl()
-            );
+                    memberDetails.getImageUrl(),
+                    memberDetails.getName()
+                    );
         }
         else {
             successLoginResponseDto = new SuccessLoginResponseDto(
                     tokenDto.getAccessToken(),
-                    memberId,
                     accessTokenExpirationInMilliSeconds
             );
         }

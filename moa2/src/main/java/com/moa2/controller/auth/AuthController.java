@@ -70,6 +70,6 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new SuccessLoginResponseDto(tokenDto.getAccessToken(), memberId, accessTokenExpirationInMilliSeconds));
+                .body(new SuccessLoginResponseDto(tokenDto.getAccessToken(), accessTokenExpirationInMilliSeconds));
     }
 }
