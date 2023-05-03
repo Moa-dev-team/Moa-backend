@@ -27,7 +27,7 @@ class ProfileCategoryRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    void getDataTest() {
+    void saveDataTest() {
         Member member = new Member();
         member.setNickname("test");
         MemberProfile memberProfile = new MemberProfile();
@@ -61,7 +61,16 @@ class ProfileCategoryRepositoryTest {
         member.setMemberProfile(memberProfile);
         memberRepository.save(member);
 
-        Member findMember = memberRepository.findById(member.getId()).get();
+        Member findMember = memberRepository.findByIdWithMemberProfile(member.getId()).get();
         assertEquals(findMember.getMemberProfile().getStatusMessage(), "test message");
+        assertEquals(findMember.getMemberProfile().getUrlLinks().get(0).getUrl(), "test urlLink1");
+        assertEquals(findMember.getMemberProfile().getUrlLinks().get(1).getUrl(), "test urlLink2");
+        assertEquals(findMember.getMemberProfile().getSocialLinks().get(0).getUrl(), "test socialLink1");
+        assertEquals(findMember.getMemberProfile().getSocialLinks().get(1).getUrl(), "test socialLink2");
+        assertEquals(findMember.getMemberProfile().getProfileJobs().get(0).getCategory().getName(), "백엔드");
+        assertEquals(findMember.getMemberProfile().getProfileInterestTechs().get(0).getCategory().getName(), "React");
+        assertEquals(findMember.getMemberProfile().getProfileInterestTechs().get(1).getCategory().getName(), "HTML");
+        assertEquals(findMember.getMemberProfile().getProfileTechStacks().get(0).getCategory().getName(), "Java");
+        assertEquals(findMember.getMemberProfile().getProfileTechStacks().get(1).getCategory().getName(), "Spring");
     }
 }
