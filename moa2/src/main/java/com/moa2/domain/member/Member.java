@@ -42,7 +42,7 @@ public class Member {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "member_profile_id")
-    private MemberProfile memberProfile;
+    private MemberProfile memberProfile = new MemberProfile();
 
     @ManyToMany
     @JoinTable(name = "member_authority",
