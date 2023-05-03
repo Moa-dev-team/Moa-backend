@@ -2,6 +2,7 @@ package com.moa2.service.member;
 
 import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.request.SignupDto;
+import com.moa2.dto.memberprofile.response.MemberProfileResponseDto;
 import com.moa2.repository.member.AuthorityRepository;
 import com.moa2.repository.member.MemberRepository;
 import jakarta.validation.Valid;
@@ -49,5 +50,11 @@ public class MemberService {
         member.setPassword(passwordEncoder.encode(signupDto.getPassword()));
         member.getAuthorities().add(authorityRepository.findByName("ROLE_USER"));
         return member;
+    }
+
+    public MemberProfileResponseDto getMemberProfile(Long memberId) {
+        Member member = memberRepository.findByIdWithMemberProfile(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("there is no member with that id"));
+        return new MemberProfileResponseDto(member);
     }
 }

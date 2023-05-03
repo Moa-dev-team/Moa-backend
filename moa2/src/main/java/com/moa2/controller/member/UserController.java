@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final AuthService authService;
     private final MemberService memberService;
+
+    //삭제 예정
     @GetMapping("/mypage")
     public ResponseEntity mypage(@RequestHeader("Authorization") String accessTokenInHeader) {
         Long memberId = authService.getMemberIdInBearerAccessToken(accessTokenInHeader);
@@ -24,5 +26,9 @@ public class UserController {
         return ResponseEntity.ok().body(memberInfo);
     }
 
+    @GetMapping("/my-profile")
+    public ResponseEntity myProfile(@RequestHeader("Authorization") String accessTokenInHeader) {
+        Long memberId = authService.getMemberIdInBearerAccessToken(accessTokenInHeader);
 
+    }
 }
