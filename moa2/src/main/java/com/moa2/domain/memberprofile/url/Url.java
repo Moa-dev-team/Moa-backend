@@ -9,4 +9,11 @@ public abstract class Url {
     private Long id;
 
     private String url;
+
+    public Url() {
+    }
+
+    public Url(String url) {
+        this.url = url;
+    }
 }
