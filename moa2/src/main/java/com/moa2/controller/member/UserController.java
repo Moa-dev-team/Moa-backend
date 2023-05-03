@@ -29,6 +29,6 @@ public class UserController {
     @GetMapping("/my-profile")
     public ResponseEntity myProfile(@RequestHeader("Authorization") String accessTokenInHeader) {
         Long memberId = authService.getMemberIdInBearerAccessToken(accessTokenInHeader);
-
+        return ResponseEntity.ok().body(memberService.getMemberProfile(memberId));
     }
 }
