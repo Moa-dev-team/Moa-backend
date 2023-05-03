@@ -11,8 +11,8 @@ public class MemberProfileResponseDto {
     private String nickname;
     private String imageUrl;
     private String statusMessage;
-    private List<String> UrlLinks;
-    private List<String> SocialLinks;
+    private List<String> urlLinks;
+    private List<String> socialLinks;
     private List<String> jobs;
     private List<String> interestTechs;
     private List<String> techStacks;
@@ -21,9 +21,9 @@ public class MemberProfileResponseDto {
         nickname = member.getNickname();
         imageUrl = member.getImageUrl();
         statusMessage = member.getMemberProfile().getStatusMessage();
-        UrlLinks = member.getMemberProfile().getUrlLinks().stream()
+        urlLinks = member.getMemberProfile().getUrlLinks().stream()
                 .map(Url::getUrl).toList();
-        SocialLinks = member.getMemberProfile().getSocialLinks().stream()
+        socialLinks = member.getMemberProfile().getSocialLinks().stream()
                 .map(Url::getUrl).toList();
         jobs = member.getMemberProfile().getProfileJobs().stream()
                 .map(profileJob -> profileJob.getCategory().getName()).toList();

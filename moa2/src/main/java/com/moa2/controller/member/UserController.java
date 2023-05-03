@@ -34,6 +34,7 @@ public class UserController {
     public ResponseEntity updateProfile(@RequestHeader("Authorization") String accessTokenInHeader,
                                         @RequestBody UpdateProfileRequestDto updateProfileRequestDto) {
         Long memberId = authService.getMemberIdInBearerAccessToken(accessTokenInHeader);
-
+        memberService.updateMemberProfile(memberId, updateProfileRequestDto);
+        return ResponseEntity.ok().body("update success");
     }
 }

@@ -7,7 +7,6 @@ import com.moa2.domain.memberprofile.profilecategory.ProfileInterestTech;
 import com.moa2.domain.memberprofile.profilecategory.ProfileJob;
 import com.moa2.domain.memberprofile.profilecategory.ProfileTechStack;
 import com.moa2.domain.memberprofile.url.SocialLink;
-import com.moa2.domain.memberprofile.url.Url;
 import com.moa2.domain.memberprofile.url.UrlLink;
 import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.memberprofile.request.UpdateProfileRequestDto;
