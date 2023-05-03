@@ -25,13 +25,29 @@ public class MemberProfile {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SocialLink> socialLinks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "memberProfile",
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileJob> profileJobs = new ArrayList<>();
-    @OneToMany(mappedBy = "memberProfile",
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileInterestTech> profileInterestTechs = new ArrayList<>();
-    @OneToMany(mappedBy = "memberProfile",
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileTechStack> profileTechStacks = new ArrayList<>();
+
+    public void setProfileJobs(List<ProfileJob> profileJobs) {
+        this.profileJobs = profileJobs;
+        for (ProfileJob profileJob : profileJobs) {
+            profileJob.setMemberProfile(this);
+        }
+    }
+    public void setProfileInterestTechs(List<ProfileInterestTech> profileInterestTechs) {
+        this.profileInterestTechs = profileInterestTechs;
+        for (ProfileInterestTech profileInterestTech : profileInterestTechs) {
+            profileInterestTech.setMemberProfile(this);
+        }
+    }
+    public void setProfileTechStacks(List<ProfileTechStack> profileTechStacks) {
+        this.profileTechStacks = profileTechStacks;
+        for (ProfileTechStack profileTechStack : profileTechStacks) {
+            profileTechStack.setMemberProfile(this);
+        }
+    }
 }
