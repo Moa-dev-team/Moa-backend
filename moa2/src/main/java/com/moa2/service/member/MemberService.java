@@ -72,7 +72,7 @@ public class MemberService {
 
     @Transactional
     public void updateMemberProfile(Long memberId, UpdateProfileRequestDto updateProfileRequestDto) {
-        Member member = memberRepository.findByIdWithMemberProfile(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("there is no member with that id"));
         member.setNickname(updateProfileRequestDto.getNickname());
         member.setImageUrl(updateProfileRequestDto.getImageUrl());
