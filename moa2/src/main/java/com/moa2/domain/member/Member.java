@@ -40,7 +40,7 @@ public class Member {
     private AuthProvider provider;
     private String providerId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "member_profile_id")
     private MemberProfile memberProfile;
 
