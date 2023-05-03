@@ -5,10 +5,7 @@ import com.moa2.domain.memberprofile.profilecategory.ProfileJob;
 import com.moa2.domain.memberprofile.profilecategory.ProfileTechStack;
 import com.moa2.domain.memberprofile.url.SocialLink;
 import com.moa2.domain.memberprofile.url.UrlLink;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,15 +20,18 @@ public class MemberProfile {
 
     private String statusMessage;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UrlLink> urlLinks = new ArrayList<>();
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SocialLink> socialLinks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile",
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileJob> profileJobs = new ArrayList<>();
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile",
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileInterestTech> profileInterestTechs = new ArrayList<>();
-    @OneToMany(mappedBy = "memberProfile")
+    @OneToMany(mappedBy = "memberProfile",
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileTechStack> profileTechStacks = new ArrayList<>();
 }
