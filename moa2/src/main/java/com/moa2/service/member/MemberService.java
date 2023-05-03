@@ -74,6 +74,9 @@ public class MemberService {
     public void updateMemberProfile(Long memberId, UpdateProfileRequestDto updateProfileRequestDto) {
         Member member = memberRepository.findByIdWithMemberProfile(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("there is no member with that id"));
+        member.setNickname(updateProfileRequestDto.getNickname());
+        member.setImageUrl(updateProfileRequestDto.getImageUrl());
+
         MemberProfile newProfile = new MemberProfile();
         newProfile.setStatusMessage(updateProfileRequestDto.getStatusMessage());
         newProfile.setUrlLinks(updateProfileRequestDto.getUrlLinks()
