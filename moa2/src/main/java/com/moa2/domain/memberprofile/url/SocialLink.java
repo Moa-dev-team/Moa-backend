@@ -1,4 +1,4 @@
-package com.moa2.domain.memberprofile;
+package com.moa2.domain.memberprofile.url;
 
 import jakarta.persistence.Entity;
 
