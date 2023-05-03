@@ -50,7 +50,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<Member> memberOptional = memberRepository.findByEmailEagerlyAuthorities(oAuth2UserInfo.getEmail());
+        Optional<Member> memberOptional = memberRepository.findByEmailWithAuthorities(oAuth2UserInfo.getEmail());
         Member member;
 
         if (memberOptional.isPresent()) {
