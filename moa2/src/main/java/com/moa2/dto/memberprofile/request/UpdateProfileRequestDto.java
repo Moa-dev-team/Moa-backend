@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class UpdateProfileResponseDto {
+public class UpdateProfileRequestDto {
     private String nickname;
     private String imageUrl;
     private String statusMessage;
