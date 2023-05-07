@@ -37,8 +37,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Authorization") String accessTokenInHeader) {
-        authService.logout(accessTokenInHeader);
+    public ResponseEntity logout() {
         ResponseCookie responseCookie = ResponseCookie.from("refreshToken", "")
                 .maxAge(0)
                 .path("/")
