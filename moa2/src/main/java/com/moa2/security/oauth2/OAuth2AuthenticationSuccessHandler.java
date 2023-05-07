@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Component
 @Slf4j
@@ -45,12 +46,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Long memberId = memberDetails.getMemberId();
         Long accessTokenExpirationInMilliSeconds =
                 jwtTokenProvider.getClaims(tokenDto.getAccessToken()).getExpiration().getTime();
-        Long refreshTokenExpirationInSeconds =
-                jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime()/1000;
+        Long refreshTokenExpirationFromNowInSeconds =
+                (jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime()
+                -(new Date().getTime())) / 1000;
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                .maxAge(refreshTokenExpirationInSeconds)
+                .maxAge(refreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();

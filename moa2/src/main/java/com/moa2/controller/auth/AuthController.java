@@ -8,10 +8,13 @@ import com.moa2.dto.auth.response.SuccessLoginResponseDto;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
 import jakarta.validation.Valid;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
@@ -57,11 +60,12 @@ public class AuthController {
     private ResponseEntity CreateTokenDtoResponse(TokenDto tokenDto) {
         Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
         Long accessTokenExpirationInMilliSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
-        Long refreshTokenExpirationInSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+        Long refreshTokenExpirationFromNowInSeconds =
+                (authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken()) - (new Date().getTime())) / 1000;
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                .maxAge(refreshTokenExpirationInSeconds)
+                .maxAge(refreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
