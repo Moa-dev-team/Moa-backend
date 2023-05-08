@@ -49,11 +49,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Long refreshTokenExpirationInMilliSeconds = jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime();
         Long refreshTokenExpirationFromNowInSeconds =
                 (refreshTokenExpirationInMilliSeconds - (new Date().getTime())) / 1000;
+        // refreshToken 이 만료하는 시간보다 10분 일찍 쿠키 수명이 끝나도록 설정
+        refreshTokenExpirationFromNowInSeconds = Math.max(refreshTokenExpirationFromNowInSeconds - 600, 0);
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                // refreshToken 이 만료하는 시간보다 10분 일찍 쿠키 수명이 끝나도록 설정
-                .maxAge(refreshTokenExpirationFromNowInSeconds - 600)
+                .maxAge(refreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
