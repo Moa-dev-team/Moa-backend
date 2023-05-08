@@ -5,14 +5,14 @@ import lombok.Data;
 @Data
 public class SuccessLoginResponseDto {
     String accessToken;
-    Long accessTokenExpirationInMilliSeconds;
+    Long refreshTokenExpirationInMilliSeconds;
     boolean isFirstLogin = false;
 
     SuccessLoginResponseDto() {
     }
 
-    public SuccessLoginResponseDto(String accessToken, Long accessTokenExpirationInMilliSeconds) {
+    public SuccessLoginResponseDto(String accessToken, Long refreshTokenExpirationInMilliSeconds) {
         this.accessToken = accessToken;
-        this.accessTokenExpirationInMilliSeconds = accessTokenExpirationInMilliSeconds;
+        this.refreshTokenExpirationInMilliSeconds = refreshTokenExpirationInMilliSeconds;
     }
 }

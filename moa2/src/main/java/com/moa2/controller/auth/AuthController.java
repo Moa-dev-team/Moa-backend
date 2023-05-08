@@ -60,12 +60,13 @@ public class AuthController {
     private ResponseEntity CreateTokenDtoResponse(TokenDto tokenDto) {
         Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
         Long accessTokenExpirationInMilliSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
-        Long refreshTokenExpirationFromNowInSeconds =
-                (authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken()) - (new Date().getTime())) / 1000;
+        Long refreshTokenExpirationInMilliSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+        Long refreshTokenExpirationFromNowInSeconds = (refreshTokenExpirationInMilliSeconds - (new Date().getTime())) / 1000;
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                .maxAge(refreshTokenExpirationFromNowInSeconds)
+                // refreshToken 이 만료하는 시간보다 10분 일찍 쿠키 수명이 끝나도록 설정
+                .maxAge(refreshTokenExpirationFromNowInSeconds - 600)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
@@ -73,6 +74,6 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new SuccessLoginResponseDto(tokenDto.getAccessToken(), accessTokenExpirationInMilliSeconds));
+                .body(new SuccessLoginResponseDto(tokenDto.getAccessToken(), refreshTokenExpirationInMilliSeconds));
     }
 }

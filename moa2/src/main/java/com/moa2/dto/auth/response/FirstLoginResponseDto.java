@@ -8,9 +8,9 @@ public class FirstLoginResponseDto extends SuccessLoginResponseDto{
     private String nickname;
 
     public FirstLoginResponseDto(String accessToken,
-                                 Long accessTokenExpirationInMilliSeconds,
+                                 Long refreshTokenExpirationInMilliSeconds,
                                  String imageUrl, String nickname) {
-        super(accessToken, accessTokenExpirationInMilliSeconds);
+        super(accessToken, refreshTokenExpirationInMilliSeconds);
         this.imageUrl = imageUrl;
         this.nickname = nickname;
         super.isFirstLogin = true;

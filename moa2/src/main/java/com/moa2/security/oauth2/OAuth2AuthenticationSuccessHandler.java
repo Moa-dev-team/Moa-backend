@@ -46,13 +46,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Long memberId = memberDetails.getMemberId();
         Long accessTokenExpirationInMilliSeconds =
                 jwtTokenProvider.getClaims(tokenDto.getAccessToken()).getExpiration().getTime();
+        Long refreshTokenExpirationInMilliSeconds = jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime();
         Long refreshTokenExpirationFromNowInSeconds =
-                (jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime()
-                -(new Date().getTime())) / 1000;
+                (refreshTokenExpirationInMilliSeconds - (new Date().getTime())) / 1000;
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                .maxAge(refreshTokenExpirationFromNowInSeconds)
+                // refreshToken 이 만료하는 시간보다 10분 일찍 쿠키 수명이 끝나도록 설정
+                .maxAge(refreshTokenExpirationFromNowInSeconds - 600)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
@@ -63,7 +64,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         if (memberDetails.getIsFirstLogin()) {
             successLoginResponseDto = new FirstLoginResponseDto(
                     tokenDto.getAccessToken(),
-                    accessTokenExpirationInMilliSeconds,
+                    refreshTokenExpirationInMilliSeconds,
                     memberDetails.getImageUrl(),
                     memberDetails.getName()
                     );
