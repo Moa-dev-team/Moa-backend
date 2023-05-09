@@ -30,7 +30,7 @@ import java.util.List;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class    SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtFilter jwtFilter;

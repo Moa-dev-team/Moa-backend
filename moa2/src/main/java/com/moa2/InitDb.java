@@ -2,7 +2,9 @@ package com.moa2;
 
 import com.moa2.domain.member.Authority;
 import com.moa2.domain.member.Member;
+import com.moa2.domain.memberprofile.category.Category;
 import com.moa2.repository.member.AuthorityRepository;
+import com.moa2.repository.memberprofile.CategoryRepository;
 import com.moa2.service.member.MemberService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,9 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
-        this.initService.dbInit();
+        this.initService.authorityInit();
+        this.initService.adminInit();
+        this.initService.categoryInit();
     }
 
     @Component
@@ -27,10 +31,12 @@ public class InitDb {
         private final AuthorityRepository authorityRepository;
         private final MemberService memberService;
         private final PasswordEncoder passwordEncoder;
-        public void dbInit() {
+        private final CategoryRepository categoryRepository;
+        public void authorityInit() {
             authorityRepository.save(new Authority("ROLE_USER"));
             authorityRepository.save(new Authority("ROLE_ADMIN"));
-
+        }
+        public void adminInit() {
             Member member = new Member();
             member.setNickname("admin");
             member.setEmail("123@com");
@@ -38,6 +44,19 @@ public class InitDb {
             member.getAuthorities().add(authorityRepository.findByName("ROLE_ADMIN"));
             member.getAuthorities().add(authorityRepository.findByName("ROLE_USER"));
             memberService.register(member);
+        }
+        public void categoryInit() {
+            String[] categories = {
+                    "백엔드", "프론트엔드", "HTML", "CSS", "JavaScript", "TypeScript",
+                    "React", "Vue", "Svelte", "Nextjs", "Java", "Spring",
+                    "Nodejs", "Nestjs", "Go", "Kotlin", "Express", "MySQL",
+                    "MongoDB", "Python", "Django", "php", "GraphQL", "Firebase"
+            };
+
+            for (String category : categories) {
+                Category newCategory = new Category(category);
+                categoryRepository.save(newCategory);
+            }
         }
     }
 }

@@ -50,7 +50,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<Member> memberOptional = memberRepository.findByEmailEagerlyAuthorities(oAuth2UserInfo.getEmail());
+        Optional<Member> memberOptional = memberRepository.findByEmailWithAuthorities(oAuth2UserInfo.getEmail());
         Member member;
 
         if (memberOptional.isPresent()) {
@@ -83,8 +83,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
     private Member updateExistingUser(Member existingMember, OAuth2UserInfo oAuth2UserInfo) {
-        existingMember.setNickname(oAuth2UserInfo.getName());
-        existingMember.setImageUrl(oAuth2UserInfo.getImageUrl());
+        existingMember.setFirstLogin(false);
         return memberRepository.save(existingMember);
     }
 }

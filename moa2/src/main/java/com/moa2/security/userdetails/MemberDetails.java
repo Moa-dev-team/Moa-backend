@@ -28,8 +28,17 @@ public class MemberDetails implements OAuth2User, UserDetails {
 
     @Override
     public String getName() {
-        return null;
+        return member.getNickname();
     }
+
+    public boolean getIsFirstLogin() {
+        return member.isFirstLogin();
+    }
+
+    public String getImageUrl() {
+        return member.getImageUrl();
+    }
+
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
     }

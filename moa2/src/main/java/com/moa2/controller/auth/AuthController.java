@@ -4,14 +4,17 @@ import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.request.LoginDto;
 import com.moa2.dto.auth.request.SignupDto;
 import com.moa2.dto.auth.TokenDto;
-import com.moa2.dto.auth.response.ResponseTokenDto;
+import com.moa2.dto.auth.response.SuccessLoginResponseDto;
 import com.moa2.service.auth.AuthService;
 import com.moa2.service.member.MemberService;
 import jakarta.validation.Valid;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
@@ -37,8 +40,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Authorization") String accessTokenInHeader) {
-        authService.logout(accessTokenInHeader);
+    public ResponseEntity logout() {
         ResponseCookie responseCookie = ResponseCookie.from("refreshToken", "")
                 .maxAge(0)
                 .path("/")
@@ -58,11 +60,14 @@ public class AuthController {
     private ResponseEntity CreateTokenDtoResponse(TokenDto tokenDto) {
         Long memberId = authService.getMemberIdInAccessToken(tokenDto.getAccessToken());
         Long accessTokenExpirationInMilliSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getAccessToken());
-        Long refreshTokenExpirationInSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+        Long refreshTokenExpirationInMilliSeconds = authService.getExpirationTimeInMilliSeconds(tokenDto.getRefreshToken());
+        Long refreshTokenExpirationFromNowInSeconds = (refreshTokenExpirationInMilliSeconds - (new Date().getTime())) / 1000;
+        // refreshToken 이 만료하는 시간보다 10분 일찍 쿠키 수명이 끝나도록 설정
+        refreshTokenExpirationFromNowInSeconds = Math.max(refreshTokenExpirationFromNowInSeconds - 600, 0);
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .path("/")
-                .maxAge(refreshTokenExpirationInSeconds)
+                .maxAge(refreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
@@ -70,6 +75,6 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new ResponseTokenDto(tokenDto.getAccessToken(), memberId, accessTokenExpirationInMilliSeconds));
+                .body(new SuccessLoginResponseDto(tokenDto.getAccessToken(), refreshTokenExpirationInMilliSeconds));
     }
 }
