@@ -39,6 +39,11 @@ public class AuthController {
         return CreateTokenDtoResponse(tokenDto);
     }
 
+    @PostMapping("login/oauth/{provider}")
+    public ResponseEntity oauthLogin(@PathVariable String provider, @RequestParam String code) {
+        
+    }
+
     @GetMapping("/logout")
     public ResponseEntity logout() {
         ResponseCookie responseCookie = ResponseCookie.from("refreshToken", "")
