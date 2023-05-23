@@ -95,7 +95,7 @@ public class    SecurityConfig {
                 .anyRequest().authenticated()
 
             .and()
-                .oauth2Client()
+//                .oauth2Client()
 //            .oauth2Login()
 //                .authorizationEndpoint()
 //                    .baseUri("/oauth2/authorize")
