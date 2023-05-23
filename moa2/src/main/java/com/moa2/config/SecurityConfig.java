@@ -95,18 +95,21 @@ public class    SecurityConfig {
                 .anyRequest().authenticated()
 
             .and()
-            .oauth2Login()
-                .authorizationEndpoint()
-                    .baseUri("/oauth2/authorize")
-                    .and()
-                .redirectionEndpoint()
-                    .baseUri("/oauth2/callback/*")
-                    .and()
-            .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-                .and()
-            .successHandler(oAuth2AuthenticationSuccessHandler)
-            .failureHandler(oAuth2AuthenticationFailureHandler);
+                .oauth2Client()
+//            .oauth2Login()
+//                .authorizationEndpoint()
+//                    .baseUri("/oauth2/authorize")
+//                    .and()
+//                .redirectionEndpoint()
+//                    .baseUri("/oauth2/callback/*")
+//                    .and()
+//            .userInfoEndpoint()
+//                .userService(customOAuth2UserService)
+//                .and()
+//            .successHandler(oAuth2AuthenticationSuccessHandler)
+//            .failureHandler(oAuth2AuthenticationFailureHandler)
+            ;
+
 
         return http.build();
     }

@@ -6,7 +6,9 @@ import com.moa2.dto.auth.response.FirstLoginResponseDto;
 import com.moa2.dto.auth.response.SuccessLoginResponseDto;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.userdetails.MemberDetails;
+import com.moa2.util.CookieUtils;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,13 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
+
+import static com.moa2.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
 @Slf4j
@@ -34,11 +40,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
 
+        String targetUrl = determineTargetUrl(request, response, authentication);
         if (response.isCommitted()) {
-            log.debug("Response has already been committed. Unable to redirect to ");
+            log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
         clearAuthenticationAttributes(request, response);
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
         TokenDto tokenDto = jwtTokenProvider.createTokens(authentication);
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
@@ -86,6 +94,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.getWriter().write(jsonString);
         response.getWriter().flush();
         response.getWriter().close();
+    }
+
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue);
+
+        String targetUrl = redirectUri.orElse("http://localhost:3000/oauth2/redirect");
+
+        String token = jwtTokenProvider.createTokens(authentication).getAccessToken();
+
+        return UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("token", token)
+                .build().toUriString();
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
