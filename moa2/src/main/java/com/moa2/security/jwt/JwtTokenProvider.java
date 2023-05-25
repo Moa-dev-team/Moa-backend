@@ -1,5 +1,6 @@
 package com.moa2.security.jwt;
 
+import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.TokenDto;
 import com.moa2.repository.member.MemberRepository;
 import com.moa2.service.auth.AccessTokenService;
@@ -79,9 +80,38 @@ public class JwtTokenProvider implements InitializingBean {
                 .compact();
     }
 
+    public String createTokenByMemberDetails(MemberDetails memberDetails, boolean rememberMe) {
+        long now = (new Date()).getTime();
+        Date validity;
+
+        if (rememberMe) {
+            validity = new Date(now + this.refreshTokenValidTimeInMilliseconds);
+        } else {
+            validity = new Date(now + this.tokenValidTimeInMilliseconds);
+        }
+
+        return Jwts.builder()
+                .setSubject(memberDetails.getUsername())
+                .claim("memberId", memberDetails.getMemberId())
+                .claim("authorities", memberDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.joining(",")))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
+
     public TokenDto createTokens(Authentication authentication) {
         String accessToken = createToken(authentication, false);
         String refreshToken = createToken(authentication, true);
+        refreshTokenService.setRefreshTokenWithAccessToken(refreshToken, accessToken);
+        accessTokenService.setAccessTokenWithRefreshToken(accessToken, refreshToken);
+        return new TokenDto(accessToken, refreshToken);
+    }
+
+    public TokenDto createTokensByMemberDetails(MemberDetails memberDetails) {
+        String accessToken = createTokenByMemberDetails(memberDetails, false);
+        String refreshToken = createTokenByMemberDetails(memberDetails, true);
         refreshTokenService.setRefreshTokenWithAccessToken(refreshToken, accessToken);
         accessTokenService.setAccessTokenWithRefreshToken(accessToken, refreshToken);
         return new TokenDto(accessToken, refreshToken);
