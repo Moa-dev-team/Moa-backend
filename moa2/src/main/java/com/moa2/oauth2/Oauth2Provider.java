@@ -12,7 +12,7 @@ public class Oauth2Provider {
     private final String userInfoUri;
 
     public Oauth2Provider(Oauth2Properties.User user, Oauth2Properties.Provider provider) {
-        this(user.getClientId(), user.getClientSecret(), user.getRedirectUri(), provider.getTokenUri(), provider.getUseInfoUri());
+        this(user.getClientId(), user.getClientSecret(), user.getRedirectUri(), provider.getTokenUri(), provider.getUserInfoUri());
     }
 
     @Builder

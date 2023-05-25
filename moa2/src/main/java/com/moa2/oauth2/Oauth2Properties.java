@@ -3,7 +3,6 @@ package com.moa2.oauth2;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class Oauth2Properties {
     @Getter @Setter
     public static class Provider {
         private String tokenUri;
-        private String useInfoUri;
+        private String userInfoUri;
         private String userNameAttribute;
     }
 
