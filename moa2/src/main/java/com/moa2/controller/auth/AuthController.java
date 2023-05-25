@@ -41,7 +41,7 @@ public class AuthController {
         return CreateTokenDtoResponse(tokenDto);
     }
 
-    @PostMapping("login/{provider}")
+    @GetMapping("login/{provider}")
     public ResponseEntity oauthLogin(@PathVariable String provider, @RequestParam String code) {
         LoginResponseDto loginResponseDto = oauth2Service.login(provider, code);
         Long refreshTokenExpirationFromNowInSeconds = (loginResponseDto.getRefreshTokenExpirationInMilliSeconds() - (new Date().getTime())) / 1000;
