@@ -1,8 +1,7 @@
-package com.moa2.util.oauth2;
+package com.moa2.oauth2;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class Oauth2Provider {

@@ -1,4 +1,4 @@
-package com.moa2.util.oauth2;
+package com.moa2.oauth2;
 
 import lombok.Getter;
 

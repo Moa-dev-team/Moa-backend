@@ -1,4 +1,4 @@
-package com.moa2.util.oauth2;
+package com.moa2.oauth2;
 
 import com.moa2.domain.member.Member;
 import com.moa2.dto.auth.TokenDto;

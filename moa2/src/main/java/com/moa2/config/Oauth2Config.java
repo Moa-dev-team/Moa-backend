@@ -1,9 +1,9 @@
 package com.moa2.config;
 
-import com.moa2.util.oauth2.InMemoryProviderRepository;
-import com.moa2.util.oauth2.Oauth2Adapter;
-import com.moa2.util.oauth2.Oauth2Properties;
-import com.moa2.util.oauth2.Oauth2Provider;
+import com.moa2.oauth2.InMemoryProviderRepository;
+import com.moa2.oauth2.Oauth2Adapter;
+import com.moa2.oauth2.Oauth2Properties;
+import com.moa2.oauth2.Oauth2Provider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
