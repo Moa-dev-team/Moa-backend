@@ -10,12 +10,15 @@ import com.moa2.repository.member.MemberRepository;
 import com.moa2.security.jwt.JwtTokenProvider;
 import com.moa2.security.oauth2.AuthProvider;
 import com.moa2.security.userdetails.MemberDetails;
+import com.moa2.security.userdetails.MemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,6 +39,7 @@ public class Oauth2Service {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthorityRepository authorityRepository;
     private final AuthenticationManager authenticationManager;
+    private final MemberDetailsService memberDetailsService;
 
     public LoginResponseDto login(String providerName, String code) {
         Oauth2Provider provider = inMemoryProviderRepository.findByProviderName(providerName);
@@ -61,11 +65,7 @@ public class Oauth2Service {
         else {
             member = registerNewMember(userProfile, providerName);
         }
-        MemberDetails memberDetails = new MemberDetails(member);
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(memberDetails, null, memberDetails.getAuthorities())
-        );
-        TokenDto tokenDto = jwtTokenProvider.createTokens(authentication);
+        TokenDto tokenDto = jwtTokenProvider.createTokensByMemberDetails(new MemberDetails(member));
         Long refreshTokenExpirationInMilliSeconds = jwtTokenProvider.getClaims(tokenDto.getRefreshToken()).getExpiration().getTime();
 
         return LoginResponseDto.builder()
