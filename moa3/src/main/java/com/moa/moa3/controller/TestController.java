@@ -1,5 +1,6 @@
 package com.moa.moa3.controller;
 
+import com.moa.moa3.dto.test.BasicRequestTestResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,6 @@ public class TestController {
         int randomNum = rand.nextInt(100);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(randomNum);
+                .body(new BasicRequestTestResponse(randomNum));
     }
-
-
 }
