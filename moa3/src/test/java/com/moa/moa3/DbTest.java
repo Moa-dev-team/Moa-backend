@@ -2,8 +2,6 @@ package com.moa.moa3;
 
 import com.moa.moa3.entity.test.Loram;
 import com.moa.moa3.service.test.LoramService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
