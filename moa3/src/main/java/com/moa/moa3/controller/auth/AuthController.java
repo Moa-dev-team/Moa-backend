@@ -1,6 +1,6 @@
 package com.moa.moa3.controller.auth;
 
-import com.moa.moa3.dto.oauth.UserData;
+import com.moa.moa3.dto.oauth.UserProfile;
 import com.moa.moa3.service.oauth.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,9 +16,9 @@ public class AuthController {
 
     @GetMapping("login/{provider}")
     public ResponseEntity oauthLogin(@PathVariable String provider, @RequestParam String code) {
-        UserData userData = oauthService.getUserData(provider, code);
+        UserProfile userProfile = oauthService.getUserProfile(provider, code);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userData);
+                .body(userProfile);
     }
 }
