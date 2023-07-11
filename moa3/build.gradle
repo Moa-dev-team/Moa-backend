@@ -16,11 +16,11 @@ repositories {
 }
 
 dependencies {
-	//configuration properties
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//WebClient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	// spring data jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -35,7 +35,8 @@ dependencies {
 	// swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-
+	//configuration properties
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 }
 
