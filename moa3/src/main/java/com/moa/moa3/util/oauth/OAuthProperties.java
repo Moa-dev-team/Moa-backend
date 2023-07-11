@@ -9,30 +9,17 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "oauth2")
 @Getter @Setter
 public class OAuthProperties {
-    private User user;
-    private Provider provider;
-
+    public Github github;
     @Getter @Setter
-    public static class User {
-        private Github github;
+    public static class Github {
+        private String clientId;
+        private String clientSecret;
+        private String redirectUri;
+        private String tokenUri;
+        private String userInfoUri;
 
-        @Getter @Setter
-        public static class Github {
-            private String clientId;
-            private String clientSecret;
-            private String redirectUri;
-        }
     }
-
-    @Getter @Setter
-    public static class Provider {
-        private Github github;
-
-        @Getter @Setter
-        public static class Github {
-            private String tokenUri;
-            private String userInfoUri;
-        }
-    }
-
 }
+
+
+
