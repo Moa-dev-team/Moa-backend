@@ -12,9 +12,6 @@ public class OAuthPropertiesTest {
     @Autowired
     private OAuthProperties oAuthProperties;
 
-    @Autowired
-    private OAuthProviderFactory oAuthProviderFactory;
-
     @Test
     public void OAuthProperties_test() {
         System.out.println(oAuthProperties.getGithub().getClientId());
@@ -24,13 +21,5 @@ public class OAuthPropertiesTest {
         System.out.println(oAuthProperties.getGithub().getUserInfoUri());
     }
 
-    @Test
-    public void OAuthProvider_test() {
-        OAuthProvider github = oAuthProviderFactory.getProvider("github");
-        System.out.println(github.getClientId());
-        System.out.println(github.getClientSecret());
-        System.out.println(github.getRedirectUri());
-        System.out.println(github.getTokenUri());
-        System.out.println(github.getUserInfoUri());
-    }
+
 }

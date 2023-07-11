@@ -16,11 +16,4 @@ public class Oauth2TokenResponseDto {
 
     @JsonProperty("token_type")
     private String tokenType;
-
-    @Builder
-    public Oauth2TokenResponseDto(String accessToken, String scope, String tokenType) {
-        this.accessToken = accessToken;
-        this.scope = scope;
-        this.tokenType = tokenType;
-    }
 }
