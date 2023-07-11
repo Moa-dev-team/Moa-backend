@@ -1,20 +1,18 @@
 package com.moa.moa3.dto.oauth;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class UserProfile {
-    private String oauthId;
+    private String oAuthId;
     private String name;
     private String email;
     private String imageUrl;
 
     @Builder
-    public UserProfile(String oauthId, String name, String email, String imageUrl) {
-        this.oauthId = oauthId;
+    public UserProfile(String oAuthId, String name, String email, String imageUrl) {
+        this.oAuthId = oAuthId;
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;

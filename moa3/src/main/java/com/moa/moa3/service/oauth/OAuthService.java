@@ -7,6 +7,7 @@ import com.moa.moa3.dto.oauth.UserProfile;
 import com.moa.moa3.util.oauth.OAuthProviderFactory;
 import com.moa.moa3.util.oauth.userprofile.UserProfileMapper;
 import com.moa.moa3.util.oauth.userprofile.UserProfileMapperFactory;
+import com.moa.moa3.validation.oauth.UserProfileValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ public class OAuthService {
         OAuthAccessTokenResponse accessTokenResponse = oAuthApi.getAccessTokenResponse(code, oAuthProvider);
         Map<String, Object> userAttributes = oAuthApi.getUserAttributes(
                 oAuthProvider, accessTokenResponse.getAccessToken());
-        return UserProfileMapperFactory.getMapper(provider).map(userAttributes);
+        UserProfile userProfile = UserProfileMapperFactory.getMapper(provider).map(userAttributes);
+
+        // oauthId 나 email 이 비어있거나 null 인지 검사합니다.
+        UserProfileValidator.validate(userProfile);
+        return userProfile;
     }
 }
