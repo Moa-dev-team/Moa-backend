@@ -19,13 +19,11 @@ public class OAuthService {
 
     private final OAuthProviderFactory oAuthProviderFactory;
 
-    private final OAuthApi oAuthApi;
-
     public UserProfile getUserProfile(String provider, String code) {
         OAuthProvider oAuthProvider = oAuthProviderFactory.getProvider(provider);
 
-        OAuthAccessTokenResponse accessTokenResponse = oAuthApi.getAccessTokenResponse(code, oAuthProvider);
-        Map<String, Object> userAttributes = oAuthApi.getUserAttributes(
+        OAuthAccessTokenResponse accessTokenResponse = OAuthApi.getAccessTokenResponse(code, oAuthProvider);
+        Map<String, Object> userAttributes = OAuthApi.getUserAttributes(
                 oAuthProvider, accessTokenResponse.getAccessToken());
         UserProfile userProfile = UserProfileMapperFactory.getMapper(provider).map(userAttributes);
 

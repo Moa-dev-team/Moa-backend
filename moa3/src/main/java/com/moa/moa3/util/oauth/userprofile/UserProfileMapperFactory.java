@@ -15,7 +15,7 @@ public class UserProfileMapperFactory {
     private final Map<String, UserProfileMapper> mappers = new HashMap<>();
 
     private UserProfileMapperFactory() {
-        // mapper 가 추가된다면 여기에 put 해주면 됩니다.
+        // mapper 가 추가된다면 여기에 추가 해주면 됩니다.
         mappers.put("github", new GithubUserProfileMapper());
     }
 

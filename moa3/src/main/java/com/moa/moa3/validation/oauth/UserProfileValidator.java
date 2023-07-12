@@ -6,6 +6,8 @@ import com.moa.moa3.exception.oauth.NotFoundOAuthIdException;
 
 public class UserProfileValidator {
 
+    private UserProfileValidator() {}
+
     public static void validate(UserProfile userProfile) throws NotFoundEmailException, NotFoundOAuthIdException {
         if (userProfile.getOAuthId() == null || userProfile.getOAuthId().isEmpty()) {
             throw new NotFoundOAuthIdException();

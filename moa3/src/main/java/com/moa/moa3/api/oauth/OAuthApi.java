@@ -2,6 +2,8 @@ package com.moa.moa3.api.oauth;
 
 import com.moa.moa3.dto.oauth.OAuthAccessTokenResponse;
 import com.moa.moa3.dto.oauth.OAuthProvider;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -13,9 +15,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
-@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OAuthApi {
-    public OAuthAccessTokenResponse getAccessTokenResponse(String code, OAuthProvider oAuthProvider) {
+    public static OAuthAccessTokenResponse getAccessTokenResponse(String code, OAuthProvider oAuthProvider) {
         return WebClient.create()
                 .post()
                 .uri(oAuthProvider.getTokenUri())
@@ -32,7 +34,7 @@ public class OAuthApi {
     }
 
     // getAccessToken 의 method 에서만 사용하기 위해 만든 private 함수입니다.
-    private MultiValueMap<String, String> accessTokenRequestForm(String code, OAuthProvider oAuthProvider) {
+    private static MultiValueMap<String, String> accessTokenRequestForm(String code, OAuthProvider oAuthProvider) {
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("code", code);
         form.add("grant_type", "authorization_code");
@@ -40,7 +42,7 @@ public class OAuthApi {
         return form;
     }
 
-    public Map<String, Object> getUserAttributes(OAuthProvider oAuthProvider, String accessToken) {
+    public static Map<String, Object> getUserAttributes(OAuthProvider oAuthProvider, String accessToken) {
         return WebClient.create()
                 .get()
                 .uri(oAuthProvider.getUserInfoUri())
