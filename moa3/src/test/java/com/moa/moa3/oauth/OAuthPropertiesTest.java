@@ -1,8 +1,6 @@
 package com.moa.moa3.oauth;
 
-import com.moa.moa3.dto.oauth.OAuthProvider;
 import com.moa.moa3.util.oauth.OAuthProperties;
-import com.moa.moa3.util.oauth.OAuthProviderFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

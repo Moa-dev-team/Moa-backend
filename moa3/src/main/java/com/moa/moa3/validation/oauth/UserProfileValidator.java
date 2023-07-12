@@ -1,19 +1,19 @@
 package com.moa.moa3.validation.oauth;
 
 import com.moa.moa3.dto.oauth.UserProfile;
-import com.moa.moa3.exception.oauth.NotFoundEmailException;
-import com.moa.moa3.exception.oauth.NotFoundOAuthIdException;
+import com.moa.moa3.exception.oauth.IllegalEmailException;
+import com.moa.moa3.exception.oauth.IllegalOAuthIdException;
 
 public class UserProfileValidator {
 
     private UserProfileValidator() {}
 
-    public static void validate(UserProfile userProfile) throws NotFoundEmailException, NotFoundOAuthIdException {
+    public static void validate(UserProfile userProfile) throws IllegalEmailException, IllegalOAuthIdException {
         if (userProfile.getOAuthId() == null || userProfile.getOAuthId().isEmpty()) {
-            throw new NotFoundOAuthIdException();
+            throw new IllegalOAuthIdException();
         }
         if (userProfile.getEmail() == null || userProfile.getEmail().isEmpty()) {
-            throw new NotFoundEmailException();
+            throw new IllegalEmailException();
         }
     }
 }
