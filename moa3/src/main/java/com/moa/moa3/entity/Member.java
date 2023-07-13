@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
 public class Member extends BaseEntity{
     @Id
     @GeneratedValue
@@ -21,4 +21,10 @@ public class Member extends BaseEntity{
     private String email;
 
     private String imageUrl;
+
+    public Member(String name, String email, String imageUrl) {
+        this.name = name;
+        this.email = email;
+        this.imageUrl = imageUrl;
+    }
 }
