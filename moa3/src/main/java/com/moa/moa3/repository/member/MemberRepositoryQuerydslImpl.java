@@ -8,7 +8,7 @@ import jakarta.persistence.PersistenceContext;
 
 import static com.moa.moa3.entity.QMember.*;
 
-public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
+abstract class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
     @PersistenceContext
     EntityManager em;
 
