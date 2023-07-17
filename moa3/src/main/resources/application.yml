@@ -1,4 +1,5 @@
 spring :
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/moa3?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -14,3 +15,12 @@ spring :
     hibernate:
       ddl-auto: create
     show-sql: true
+
+# oauth
+oauth2:
+  github:
+    client-id: d0797abc068a3693fe26
+    client-secret: e79d87694a09d16d6870644750e59aee26b0fe89
+    redirect-uri: http://localhost:3000/oauth2/callback/github
+    token-uri: https://github.com/login/oauth/access_token
+    user-info-uri: https://api.github.com/user
