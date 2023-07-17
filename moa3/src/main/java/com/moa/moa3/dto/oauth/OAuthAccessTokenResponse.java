@@ -1,14 +1,10 @@
-package com.moa2.dto.auth.response;
+package com.moa.moa3.dto.oauth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class Oauth2TokenResponseDto {
+public class OAuthAccessTokenResponse {
     @JsonProperty("access_token")
     private String accessToken;
 

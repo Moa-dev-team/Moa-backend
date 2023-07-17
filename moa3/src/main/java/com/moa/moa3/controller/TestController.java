@@ -12,7 +12,6 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/test")
-@Slf4j
 public class TestController {
     @GetMapping
     public ResponseEntity basicRequestTest() {
