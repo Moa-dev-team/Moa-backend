@@ -28,4 +28,8 @@ public class AccessTokenService {
     public void deleteAt(String accessToken) {
         redisRepository.delete(getKey(accessToken));
     }
+
+    public boolean isExist(String accessToken) {
+        return redisRepository.get(getKey(accessToken)) != null;
+    }
 }

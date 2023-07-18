@@ -24,4 +24,8 @@ public class RefreshTokenService {
     public void deleteRt(String refreshToken) {
         redisRepository.delete(getKey(refreshToken));
     }
+
+    public boolean isExist(String refreshToken) {
+        return redisRepository.get(getKey(refreshToken)) != null;
+    }
 }
