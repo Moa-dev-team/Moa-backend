@@ -1,4 +1,4 @@
-package com.moa.moa3.dto.oauth;
+package com.moa.moa3.util.oauth;
 
 import lombok.Builder;
 import lombok.Getter;
