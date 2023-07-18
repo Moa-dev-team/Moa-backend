@@ -24,3 +24,9 @@ oauth2:
     redirect-uri: http://localhost:3000/oauth2/callback/github
     token-uri: https://github.com/login/oauth/access_token
     user-info-uri: https://api.github.com/user
+
+# jwt
+jwt:
+  secret: "ddhjfkafdshjlflhjdas3288998ksjkskj28kjas829uaw89242kl4jk12j6jk1jjjsa28jdska289kj289jdak282313212412312"
+  access-token-validity-in-seconds: 43200 # 12 hours
+  refresh-token-validity-in-seconds: 604800 # 1 week
