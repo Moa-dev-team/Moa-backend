@@ -5,6 +5,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
 import static com.moa.moa3.entity.member.QMember.*;
 
 @Transactional(readOnly = true)
@@ -22,13 +25,15 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
     }
 
     @Override
-    public Member findByEmailWithAuthorities(String email) {
+    public Optional<Member> findByEmailWithAuthorities(String email) {
         JPAQueryFactory query = new JPAQueryFactory(em);
-        return query
-                .selectFrom(member)
-                .join(member.authorities)
-                .fetchJoin()
-                .where(member.email.eq(email))
-                .fetchOne();
+        return Optional.ofNullable(
+                query
+                        .selectFrom(member)
+                        .join(member.authorities)
+                        .fetchJoin()
+                        .where(member.email.eq(email))
+                        .fetchFirst()
+        );
     }
 }
