@@ -34,7 +34,7 @@ public class JwtTokenService {
         key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public Claims getClaims(String token) {
+    private Claims getClaims(String token) {
         jwtTokenValidator.validateToken(token);
 
         return Jwts.parserBuilder()
@@ -58,5 +58,9 @@ public class JwtTokenService {
         MemberDetails memberDetails = new MemberDetails(member);
 
         return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
+    }
+
+    public Long getTokenExpirationInMilliseconds(String token) {
+        return getClaims(token).getExpiration().getTime();
     }
 }
