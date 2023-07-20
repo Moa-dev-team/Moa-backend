@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.moa.moa3.entity.member.QMember.*;
 
 @Transactional(readOnly = true)
-abstract class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
+public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
     @PersistenceContext
     EntityManager em;
 
