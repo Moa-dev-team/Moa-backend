@@ -15,10 +15,20 @@ abstract class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
     @Override
     public Member findByName(String name) {
         JPAQueryFactory query = new JPAQueryFactory(em);
-        Member result = query
+        return query
                 .selectFrom(member)
                 .where(member.name.eq(name))
                 .fetchOne();
-        return result;
+    }
+
+    @Override
+    public Member findByEmailWithAuthorities(String email) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        return query
+                .selectFrom(member)
+                .join(member.authorities)
+                .fetchJoin()
+                .where(member.email.eq(email))
+                .fetchOne();
     }
 }
