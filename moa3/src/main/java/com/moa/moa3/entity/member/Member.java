@@ -3,6 +3,7 @@ package com.moa.moa3.entity.member;
 import com.moa.moa3.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,15 +30,18 @@ public class Member extends BaseEntity {
 
     private String imageUrl;
 
+    private String oAuthProvider;
+
     @ManyToMany
     @JoinTable(name = "member_authority",
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities = new HashSet<>();
 
-    public Member(String name, String email, String imageUrl) {
+    public Member(String name, String email, String imageUrl, String oAuthProvider) {
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
+        this.oAuthProvider = oAuthProvider;
     }
 }
