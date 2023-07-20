@@ -38,6 +38,7 @@ public class Member extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities = new HashSet<>();
 
+    @Builder
     public Member(String name, String email, String imageUrl, String oAuthProvider) {
         this.name = name;
         this.email = email;

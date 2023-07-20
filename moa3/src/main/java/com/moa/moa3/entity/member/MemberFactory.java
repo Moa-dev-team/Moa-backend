@@ -11,14 +11,24 @@ public class MemberFactory {
 
     private final AuthorityRepository authorityRepository;
 
-    public Member getUser(String name, String email, String imageUrl) {
-        Member member = new Member(name, email, imageUrl);
+    public Member createUser(String name, String email, String imageUrl, String oAuthProvider) {
+        Member member = Member.builder()
+                .name(name)
+                .email(email)
+                .imageUrl(imageUrl)
+                .oAuthProvider(oAuthProvider)
+                .build();
         member.getAuthorities().add(authorityRepository.findByName("ROLE_USER"));
         return member;
     }
 
-    public Member getAdmin(String name, String email, String imageUrl) {
-        Member member = new Member(name, email, imageUrl);
+    public Member createAdmin(String name, String email, String imageUrl, String oAuthProvider) {
+        Member member = Member.builder()
+                .name(name)
+                .email(email)
+                .imageUrl(imageUrl)
+                .oAuthProvider(oAuthProvider)
+                .build();
         member.getAuthorities().add(authorityRepository.findByName("ROLE_ADMIN"));
         member.getAuthorities().add(authorityRepository.findByName("ROLE_USER"));
         return member;

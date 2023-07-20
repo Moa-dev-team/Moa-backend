@@ -20,7 +20,7 @@ class MemberRepositoryTest {
 
     @Test
     public void testQuery() {
-        Member member = new Member("test", "test@com", "test.com");
+        Member member = new Member("test", "test@com", "test.com", "local");
         memberRepository.save(member);
 
         //초기화
