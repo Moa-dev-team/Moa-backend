@@ -1,6 +1,6 @@
 package com.moa.moa3.oauth;
 
-import com.moa.moa3.dto.oauth.OAuthProvider;
+import com.moa.moa3.util.oauth.OAuthProvider;
 import com.moa.moa3.exception.oauth.NotFoundProviderException;
 import com.moa.moa3.util.oauth.OAuthProviderFactory;
 import org.junit.jupiter.api.Assertions;

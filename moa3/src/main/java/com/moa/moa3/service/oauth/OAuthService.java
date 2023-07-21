@@ -2,10 +2,10 @@ package com.moa.moa3.service.oauth;
 
 import com.moa.moa3.api.oauth.OAuthApi;
 import com.moa.moa3.dto.oauth.OAuthAccessTokenResponse;
-import com.moa.moa3.dto.oauth.OAuthProvider;
+import com.moa.moa3.util.oauth.OAuthProvider;
 import com.moa.moa3.dto.oauth.UserProfile;
 import com.moa.moa3.util.oauth.OAuthProviderFactory;
-import com.moa.moa3.util.oauth.userprofile.UserProfileMapperFactory;
+import com.moa.moa3.util.oauth.userprofile.UserProfileExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +23,6 @@ public class OAuthService {
         OAuthAccessTokenResponse accessTokenResponse = OAuthApi.getAccessTokenResponse(code, oAuthProvider);
         Map<String, Object> userAttributes = OAuthApi.getUserAttributes(
                 oAuthProvider, accessTokenResponse.getAccessToken());
-        return UserProfileMapperFactory.getMapper(provider).map(userAttributes);
+        return UserProfileExtractor.extract(provider, userAttributes);
     }
 }

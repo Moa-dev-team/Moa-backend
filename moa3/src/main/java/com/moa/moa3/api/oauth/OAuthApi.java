@@ -1,12 +1,11 @@
 package com.moa.moa3.api.oauth;
 
 import com.moa.moa3.dto.oauth.OAuthAccessTokenResponse;
-import com.moa.moa3.dto.oauth.OAuthProvider;
+import com.moa.moa3.util.oauth.OAuthProvider;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
