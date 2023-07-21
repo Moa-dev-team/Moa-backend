@@ -1,10 +1,9 @@
 package com.moa.moa3.controller.auth;
 
-import com.moa.moa3.dto.oauth.LoginResponse;
-import com.moa.moa3.dto.oauth.LoginSuccess;
-import com.moa.moa3.dto.oauth.UserProfile;
+import com.moa.moa3.dto.oauth.*;
 import com.moa.moa3.jwt.JwtTokenService;
 import com.moa.moa3.service.oauth.OAuthService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +34,28 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new LoginResponse(loginSuccess, refreshTokenExpirationFromNowInSeconds));
+    }
+
+    @GetMapping("refresh")
+    public ResponseEntity oauthRefresh(@CookieValue String refreshToken) {
+        RefreshSuccess refreshSuccess = oauthService.refresh(refreshToken);
+
+        String newAccessToken = refreshSuccess.getAccessToken();
+        String newRefreshToken = refreshSuccess.getRefreshToken();
+
+        Long newRefreshTokenExpirationInMilliseconds = jwtTokenService.getTokenExpirationInMilliseconds(newRefreshToken);
+        Long newRefreshTokenExpirationFromNowInSeconds = calTokenExpirationFromNowInSeconds(newRefreshTokenExpirationInMilliseconds);
+
+        HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .path("/")
+                .maxAge(newRefreshTokenExpirationFromNowInSeconds)
+//                .secure(true)
+                .httpOnly(true)
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new RefreshResponse(newAccessToken, newRefreshTokenExpirationFromNowInSeconds));
     }
 
     private Long calTokenExpirationFromNowInSeconds(Long tokenExpirationInMilliSeconds) {
