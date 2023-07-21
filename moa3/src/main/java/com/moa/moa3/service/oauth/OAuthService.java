@@ -1,20 +1,21 @@
 package com.moa.moa3.service.oauth;
 
 import com.moa.moa3.api.oauth.OAuthApi;
-import com.moa.moa3.dto.oauth.LoginSuccess;
-import com.moa.moa3.dto.oauth.OAuthAccessTokenResponse;
-import com.moa.moa3.dto.oauth.OAuthProvider;
-import com.moa.moa3.dto.oauth.UserProfile;
+import com.moa.moa3.dto.oauth.*;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.entity.member.MemberFactory;
 import com.moa.moa3.exception.oauth.DuplicateLoginFailureException;
 import com.moa.moa3.jwt.JwtTokenProvider;
+import com.moa.moa3.jwt.JwtTokenService;
 import com.moa.moa3.repository.member.MemberRepository;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.util.oauth.OAuthProviderFactory;
 import com.moa.moa3.util.oauth.userprofile.UserProfileMapperFactory;
+import com.moa.moa3.validation.jwt.JwtTokenValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -28,6 +29,7 @@ public class OAuthService {
     private final MemberRepository memberRepository;
     private final MemberFactory memberFactory;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenService jwtTokenService;
 
     public LoginSuccess login(String provider, String code) {
         UserProfile userProfile = getUserProfile(provider, code);
@@ -57,6 +59,18 @@ public class OAuthService {
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
         return new LoginSuccess(member, firstLogin, accessToken, refreshToken);
+    }
+
+    public RefreshSuccess refresh(String refreshToken) {
+        Authentication authentication = jwtTokenService.createAuthentication(refreshToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String newAccessToken = jwtTokenProvider.createAccessToken(authentication);
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(authentication);
+
+        //이전에 발급된 at, rt token 을 삭제시키는 로직을 넣을지 고민 중입니다.
+
+        return new RefreshSuccess(newAccessToken, newRefreshToken);
     }
 
 
