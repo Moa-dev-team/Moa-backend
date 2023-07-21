@@ -21,8 +21,9 @@ public class AuthController {
     @GetMapping("login/{provider}")
     public ResponseEntity oauthLogin(@PathVariable String provider, @RequestParam String code) {
         LoginSuccess loginSuccess = oauthService.login(provider, code);
-        Long refreshTokenExpirationFromNowInSeconds = calTokenExpirationFromNowInSeconds(
-                jwtTokenService.getTokenExpirationInMilliseconds(loginSuccess.getRefreshToken()));
+
+        Long refreshTokenExpirationInMilliseconds = jwtTokenService.getTokenExpirationInMilliseconds(loginSuccess.getRefreshToken());
+        Long refreshTokenExpirationFromNowInSeconds = calTokenExpirationFromNowInSeconds(refreshTokenExpirationInMilliseconds);
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", loginSuccess.getRefreshToken())
                 .path("/")
