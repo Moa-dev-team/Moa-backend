@@ -1,5 +1,6 @@
-package com.moa.moa3.dto.oauth;
+package com.moa.moa3.dto.auth;
 
+import com.moa.moa3.dto.oauth.LoginSuccess;
 import lombok.Data;
 
 @Data

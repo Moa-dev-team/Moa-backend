@@ -1,6 +1,7 @@
 package com.moa.moa3.service.oauth;
 
 import com.moa.moa3.api.oauth.OAuthApi;
+import com.moa.moa3.dto.jwt.AtRt;
 import com.moa.moa3.dto.oauth.*;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.entity.member.MemberFactory;
@@ -55,22 +56,20 @@ public class OAuthService {
         MemberDetails memberDetails = new MemberDetails(member);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 memberDetails, null, memberDetails.getAuthorities());
-        String accessToken = jwtTokenProvider.createAccessToken(authentication);
-        String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+        AtRt atRt = jwtTokenProvider.createAtRt(authentication);
 
-        return new LoginSuccess(member, firstLogin, accessToken, refreshToken);
+        return new LoginSuccess(member, firstLogin, atRt.getAccessToken(), atRt.getRefreshToken());
     }
 
     public RefreshSuccess refresh(String refreshToken) {
-        Authentication authentication = jwtTokenService.createAuthentication(refreshToken);
+        Authentication authentication = jwtTokenService.createAuthenticationWithRt(refreshToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(authentication);
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(authentication);
+        AtRt atRt = jwtTokenProvider.createAtRt(authentication);
 
         //이전에 발급된 at, rt token 을 삭제시키는 로직을 넣을지 고민 중입니다.
 
-        return new RefreshSuccess(newAccessToken, newRefreshToken);
+        return new RefreshSuccess(atRt.getAccessToken(), atRt.getRefreshToken());
     }
 
 

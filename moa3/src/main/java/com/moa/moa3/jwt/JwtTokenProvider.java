@@ -1,6 +1,9 @@
 package com.moa.moa3.jwt;
 
+import com.moa.moa3.dto.jwt.AtRt;
 import com.moa.moa3.security.MemberDetails;
+import com.moa.moa3.service.redis.AccessTokenService;
+import com.moa.moa3.service.redis.RefreshTokenService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -26,12 +29,15 @@ public class JwtTokenProvider {
     private Long refreshTokenValidityInSeconds;
     private Key key;
 
+    private final AccessTokenService accessTokenService;
+    private final RefreshTokenService refreshTokenService;
+
     @PostConstruct
     protected void init() {
         key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String createAccessToken(Authentication authentication) {
+    private String createAccessToken(Authentication authentication) {
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Date validity = getDateAfter(this.accessTokenValidityInSeconds);
@@ -39,12 +45,21 @@ public class JwtTokenProvider {
         return createToken(memberDetails, validity);
     }
 
-    public String createRefreshToken(Authentication authentication) {
+    private String createRefreshToken(Authentication authentication) {
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Date validity = getDateAfter(this.refreshTokenValidityInSeconds);
 
         return createToken(memberDetails, validity);
+    }
+
+    public AtRt createAtRt(Authentication authentication) {
+        String accessToken = createAccessToken(authentication);
+        String refreshToken = createRefreshToken(authentication);
+
+        accessTokenService.mapAtToRt(accessToken, refreshToken);
+        refreshTokenService.mapRtToAt(refreshToken, accessToken);
+        return new AtRt(accessToken, refreshToken);
     }
 
     private Date getDateAfter(long seconds) {
