@@ -1,11 +1,13 @@
 spring :
 
+  # mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/moa3?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: 1234
 
+  # jpa
   jpa:
     properties:
       hibernate:
@@ -16,6 +18,14 @@ spring :
       ddl-auto: create
     show-sql: true
 
+  # redis
+  data :
+    redis:
+      host: localhost
+      port: 6379
+
+
+
 # oauth
 oauth2:
   github:
@@ -24,3 +34,9 @@ oauth2:
     redirect-uri: http://localhost:3000/oauth2/callback/github
     token-uri: https://github.com/login/oauth/access_token
     user-info-uri: https://api.github.com/user
+
+# jwt
+jwt:
+  secret: "ddhjfkafdshjlflhjdas3288998ksjkskj28kjas829uaw89242kl4jk12j6jk1jjjsa28jdska289kj289jdak282313212412312"
+  access-token-validity-in-seconds: 43200 # 12 hours
+  refresh-token-validity-in-seconds: 604800 # 1 week
