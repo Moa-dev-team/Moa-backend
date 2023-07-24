@@ -81,10 +81,15 @@ public class JwtTokenService {
         return createAtRt(authentication);
     }
 
-    public AtRt createAtRt(String refreshToken) {
+    public AtRt refresh(String refreshToken) {
         jwtTokenValidator.validateRefreshToken(refreshToken);
         Authentication authentication = createAuthentication(refreshToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String oldAccessToken = refreshTokenService.getAt(refreshToken);
+        accessTokenService.deleteAt(oldAccessToken);
+        refreshTokenService.deleteRt(refreshToken);
+
         return createAtRt(authentication);
     }
     

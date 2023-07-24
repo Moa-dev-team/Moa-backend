@@ -40,11 +40,9 @@ public class OAuthService {
         return new LoginSuccess(member, atRt);
     }
 
-    public RefreshSuccess refresh(String refreshToken) {
-        AtRt atRt = jwtTokenService.createAtRt(refreshToken);
-        return new RefreshSuccess(atRt.getAccessToken(), atRt.getRefreshToken());
+    public AtRt refresh(String refreshToken) {
+        return jwtTokenService.refresh(refreshToken);
     }
-
 
     private UserProfile getUserProfile(String provider, String code) {
         OAuthProvider oAuthProvider = oAuthProviderFactory.getProvider(provider);

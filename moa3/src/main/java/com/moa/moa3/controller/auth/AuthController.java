@@ -2,6 +2,7 @@ package com.moa.moa3.controller.auth;
 
 import com.moa.moa3.dto.auth.LoginResponse;
 import com.moa.moa3.dto.auth.RefreshResponse;
+import com.moa.moa3.dto.jwt.AtRt;
 import com.moa.moa3.dto.oauth.*;
 import com.moa.moa3.jwt.JwtTokenService;
 import com.moa.moa3.service.oauth.OAuthService;
@@ -40,10 +41,10 @@ public class AuthController {
 
     @GetMapping("refresh")
     public ResponseEntity oauthRefresh(@CookieValue String refreshToken) {
-        RefreshSuccess refreshSuccess = oauthService.refresh(refreshToken);
+        AtRt atRt = oauthService.refresh(refreshToken);
 
-        String newAccessToken = refreshSuccess.getAccessToken();
-        String newRefreshToken = refreshSuccess.getRefreshToken();
+        String newAccessToken = atRt.getAccessToken();
+        String newRefreshToken = atRt.getRefreshToken();
 
         Long newRefreshTokenExpirationInMilliseconds = jwtTokenService.getTokenExpirationInMilliseconds(newRefreshToken);
         Long newRefreshTokenExpirationFromNowInSeconds = calTokenExpirationFromNowInSeconds(newRefreshTokenExpirationInMilliseconds);
