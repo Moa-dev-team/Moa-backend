@@ -34,7 +34,7 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new LoginResponse(loginSuccess, refreshTokenExpirationFromNowInSeconds));
+                .body(new LoginResponse(loginSuccess, refreshTokenExpirationInMilliseconds));
     }
 
     @GetMapping("refresh")
@@ -56,7 +56,7 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new RefreshResponse(newAccessToken, newRefreshTokenExpirationFromNowInSeconds));
+                .body(new RefreshResponse(newAccessToken, newRefreshTokenExpirationInMilliseconds));
     }
 
     private Long calTokenExpirationFromNowInSeconds(Long tokenExpirationInMilliSeconds) {
