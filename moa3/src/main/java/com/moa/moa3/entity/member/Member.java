@@ -31,6 +31,10 @@ public class Member extends BaseEntity {
     private String imageUrl;
 
     private String oAuthProvider;
+    private boolean firstLogin;
+    public void setFirstLogin(boolean firstLogin){
+        this.firstLogin = firstLogin;
+    }
 
     @ManyToMany
     @JoinTable(name = "member_authority",
@@ -44,5 +48,6 @@ public class Member extends BaseEntity {
         this.email = email;
         this.imageUrl = imageUrl;
         this.oAuthProvider = oAuthProvider;
+        firstLogin = true;
     }
 }

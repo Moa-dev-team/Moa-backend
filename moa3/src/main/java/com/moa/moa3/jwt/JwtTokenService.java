@@ -58,6 +58,8 @@ public class JwtTokenService {
         return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
     }
 
+    
+
     public Authentication createAuthenticationWithAt(String accessToken) {
         jwtTokenValidator.validateAccessToken(accessToken);
         return createAuthentication(accessToken);

@@ -10,6 +10,7 @@ import com.moa.moa3.jwt.JwtTokenProvider;
 import com.moa.moa3.jwt.JwtTokenService;
 import com.moa.moa3.repository.member.MemberRepository;
 import com.moa.moa3.security.MemberDetails;
+import com.moa.moa3.service.member.MemberService;
 import com.moa.moa3.util.oauth.OAuthProviderFactory;
 import com.moa.moa3.util.oauth.userprofile.UserProfileMapperFactory;
 import com.moa.moa3.validation.jwt.JwtTokenValidator;
@@ -27,38 +28,21 @@ import java.util.Optional;
 public class OAuthService {
 
     private final OAuthProviderFactory oAuthProviderFactory;
-    private final MemberRepository memberRepository;
-    private final MemberFactory memberFactory;
+    private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenService jwtTokenService;
 
     public LoginSuccess login(String provider, String code) {
         UserProfile userProfile = getUserProfile(provider, code);
 
-        Optional<Member> memberOptional = memberRepository.findByEmailWithAuthorities(userProfile.getEmail());
-        Member member;
-        boolean firstLogin = true;
-        // 이미 가입된 계정이 존재할 경우
-        if (memberOptional.isPresent()) {
-            member = memberOptional.get();
-            // 이미 가입된 계정의 소셜 사이트와 현재 가입요청한 소셜 사이트가 다를 경우 - 로그인 실패
-            if (!member.getOAuthProvider().equals(provider)) {
-                throw new DuplicateLoginFailureException(member.getOAuthProvider());
-            }
-            // 이미 가입된 계정의 소셜 사이트와 현재 가입요청한 소셜 사이트가 같을 경우 - 로그인 성공
-            firstLogin = false;
-        }
-        // 처음 가입한 경우 - 로그인 성공
-        else {
-            member = memberFactory.createUser(userProfile, provider);
-        }
+        Member member = memberService.getOrCreateMember(userProfile, provider);
 
         MemberDetails memberDetails = new MemberDetails(member);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 memberDetails, null, memberDetails.getAuthorities());
         AtRt atRt = jwtTokenProvider.createAtRt(authentication);
 
-        return new LoginSuccess(member, firstLogin, atRt.getAccessToken(), atRt.getRefreshToken());
+        return new LoginSuccess(member, atRt);
     }
 
     public RefreshSuccess refresh(String refreshToken) {
