@@ -1,8 +1,11 @@
 package com.moa.moa3.jwt;
 
+import com.moa.moa3.dto.jwt.AtRt;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.repository.member.MemberRepository;
 import com.moa.moa3.security.MemberDetails;
+import com.moa.moa3.service.redis.AccessTokenService;
+import com.moa.moa3.service.redis.RefreshTokenService;
 import com.moa.moa3.validation.jwt.JwtTokenValidator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -28,6 +31,9 @@ public class JwtTokenService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenValidator jwtTokenValidator;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AccessTokenService accessTokenService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostConstruct
     protected void init() {
@@ -58,6 +64,14 @@ public class JwtTokenService {
         return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
     }
 
+    public AtRt createAtRt(Authentication authentication) {
+        String accessToken = jwtTokenProvider.createAccessToken(authentication);
+        String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+
+        accessTokenService.mapAtToRt(accessToken, refreshToken);
+        refreshTokenService.mapRtToAt(refreshToken, accessToken);
+        return new AtRt(accessToken, refreshToken);
+    }
     
 
     public Authentication createAuthenticationWithAt(String accessToken) {

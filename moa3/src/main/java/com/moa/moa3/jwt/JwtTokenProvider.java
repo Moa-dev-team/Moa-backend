@@ -29,15 +29,12 @@ public class JwtTokenProvider {
     private Long refreshTokenValidityInSeconds;
     private Key key;
 
-    private final AccessTokenService accessTokenService;
-    private final RefreshTokenService refreshTokenService;
-
     @PostConstruct
     protected void init() {
         key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    private String createAccessToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Date validity = getDateAfter(this.accessTokenValidityInSeconds);
@@ -45,21 +42,12 @@ public class JwtTokenProvider {
         return createToken(memberDetails, validity);
     }
 
-    private String createRefreshToken(Authentication authentication) {
+    public String createRefreshToken(Authentication authentication) {
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Date validity = getDateAfter(this.refreshTokenValidityInSeconds);
 
         return createToken(memberDetails, validity);
-    }
-
-    public AtRt createAtRt(Authentication authentication) {
-        String accessToken = createAccessToken(authentication);
-        String refreshToken = createRefreshToken(authentication);
-
-        accessTokenService.mapAtToRt(accessToken, refreshToken);
-        refreshTokenService.mapRtToAt(refreshToken, accessToken);
-        return new AtRt(accessToken, refreshToken);
     }
 
     private Date getDateAfter(long seconds) {
