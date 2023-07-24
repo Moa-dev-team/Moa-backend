@@ -55,6 +55,11 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+
+	// mac issue
+	// mac 과 spring 의 호환성 문제로 인해 추가하였습니다.
+	implementation("io.netty:netty-resolver-dns-native-macos:4.1.79.Final:osx-aarch_64")
+
 }
 
 tasks.named('test') {
