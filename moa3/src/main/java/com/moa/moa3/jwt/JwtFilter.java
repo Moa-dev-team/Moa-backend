@@ -24,11 +24,11 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String jwt = resolveToken(request);
+        String accessToken = resolveToken(request);
 
         try {
-            if (jwt != null) {
-                Authentication authentication = jwtTokenService.createAuthentication(jwt);
+            if (accessToken != null) {
+                Authentication authentication = jwtTokenService.createAuthenticationWithAt(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {

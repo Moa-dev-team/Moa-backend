@@ -44,9 +44,7 @@ public class JwtTokenService {
                 .getBody();
     }
 
-    public Authentication createAuthentication(String token) {
-        jwtTokenValidator.validateToken(token);
-
+    private Authentication createAuthentication(String token) {
         Claims claims = getClaims(token);
 
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils
@@ -58,6 +56,15 @@ public class JwtTokenService {
         MemberDetails memberDetails = new MemberDetails(member);
 
         return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
+    }
+
+    public Authentication createAuthenticationWithAt(String accessToken) {
+        jwtTokenValidator.validateAccessToken(accessToken);
+        return createAuthentication(accessToken);
+    }
+    public Authentication createAuthenticationWithRt(String refreshToken) {
+        jwtTokenValidator.validateRefreshToken(refreshToken);
+        return createAuthentication(refreshToken);
     }
 
     public Long getTokenExpirationInMilliseconds(String token) {
