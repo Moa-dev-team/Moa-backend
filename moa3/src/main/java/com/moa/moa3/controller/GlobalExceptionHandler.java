@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     // 400
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            NotFoundProviderException.class,
+            DuplicateLoginFailureException.class
+    })
     @ResponseBody
     public ResponseEntity<Object> handleBadRequestException(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -23,8 +27,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
         BadCredentialsException.class,
         InvalidTokenRequestException.class,
-        NotFoundProviderException.class,
-        DuplicateLoginFailureException.class
     })
     @ResponseBody
     public ResponseEntity<Object> handleUnAuthorizedException(Exception ex) {
