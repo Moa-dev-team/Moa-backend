@@ -35,24 +35,13 @@ public class OAuthService {
         UserProfile userProfile = getUserProfile(provider, code);
 
         Member member = memberService.getOrCreateMember(userProfile, provider);
-
-        MemberDetails memberDetails = new MemberDetails(member);
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(
-                memberDetails, null, memberDetails.getAuthorities());
-        AtRt atRt = jwtTokenService.createAtRt(authentication);
+        AtRt atRt = jwtTokenService.createAtRt(member);
 
         return new LoginSuccess(member, atRt);
     }
 
     public RefreshSuccess refresh(String refreshToken) {
-        Authentication authentication = jwtTokenService.createAuthenticationWithRt(refreshToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        AtRt atRt = jwtTokenService.createAtRt(authentication);
-
-        //이전에 발급된 at, rt token 을 삭제시키는 로직을 넣을지 고민 중입니다.
-
+        AtRt atRt = jwtTokenService.createAtRt(refreshToken);
         return new RefreshSuccess(atRt.getAccessToken(), atRt.getRefreshToken());
     }
 

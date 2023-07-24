@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -42,7 +43,6 @@ public class JwtTokenService {
 
     private Claims getClaims(String token) {
         jwtTokenValidator.validateToken(token);
-
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -64,7 +64,7 @@ public class JwtTokenService {
         return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
     }
 
-    public AtRt createAtRt(Authentication authentication) {
+    private AtRt createAtRt(Authentication authentication) {
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
@@ -72,15 +72,26 @@ public class JwtTokenService {
         refreshTokenService.mapRtToAt(refreshToken, accessToken);
         return new AtRt(accessToken, refreshToken);
     }
+
+    public AtRt createAtRt(Member member) {
+        MemberDetails memberDetails = new MemberDetails(member);
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        memberDetails, null, memberDetails.getAuthorities());
+        return createAtRt(authentication);
+    }
+
+    public AtRt createAtRt(String refreshToken) {
+        jwtTokenValidator.validateRefreshToken(refreshToken);
+        Authentication authentication = createAuthentication(refreshToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return createAtRt(authentication);
+    }
     
 
     public Authentication createAuthenticationWithAt(String accessToken) {
         jwtTokenValidator.validateAccessToken(accessToken);
         return createAuthentication(accessToken);
-    }
-    public Authentication createAuthenticationWithRt(String refreshToken) {
-        jwtTokenValidator.validateRefreshToken(refreshToken);
-        return createAuthentication(refreshToken);
     }
 
     public Long getTokenExpirationInMilliseconds(String token) {
