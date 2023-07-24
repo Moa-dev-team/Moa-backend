@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 public class MemberDetails implements UserDetails {
     private final Member member;
 
+    public Member getMember() {
+        return member;
+    }
     public Long getMemberId() {
         return member.getId();
     }
