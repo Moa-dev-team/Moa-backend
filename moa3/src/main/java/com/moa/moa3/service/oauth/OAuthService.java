@@ -50,6 +50,6 @@ public class OAuthService {
         OAuthAccessTokenResponse accessTokenResponse = OAuthApi.getAccessTokenResponse(code, oAuthProvider);
         Map<String, Object> userAttributes = OAuthApi.getUserAttributes(
                 oAuthProvider, accessTokenResponse.getAccessToken());
-        return UserProfileMapperFactory.getMapper(provider).map(userAttributes);
+        return UserProfileExtractor.extract(provider, userAttributes);
     }
 }
