@@ -63,6 +63,7 @@ public class SecurityConfig {
         .and()
             .authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/user", "/user/**").hasAuthority("ROLE_USER")
                 .requestMatchers(PUBLIC_MATCHERS).permitAll()
                 .requestMatchers(SWAGGER_MATCHERS).permitAll()
                 .anyRequest().authenticated();
