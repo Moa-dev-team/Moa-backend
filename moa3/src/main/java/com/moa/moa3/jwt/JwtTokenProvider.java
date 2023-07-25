@@ -4,6 +4,7 @@ import com.moa.moa3.dto.jwt.AtRt;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.service.redis.AccessTokenService;
 import com.moa.moa3.service.redis.RefreshTokenService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -32,6 +33,14 @@ public class JwtTokenProvider {
     @PostConstruct
     protected void init() {
         key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public String createAccessToken(Authentication authentication) {

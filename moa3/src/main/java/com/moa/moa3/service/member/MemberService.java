@@ -41,4 +41,9 @@ public class MemberService {
         return member;
     }
 
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+        );
+    }
 }
