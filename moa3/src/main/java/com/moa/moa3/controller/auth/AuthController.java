@@ -19,10 +19,13 @@ public class AuthController {
 
     private final OAuthService oauthService;
     private final JwtTokenService jwtTokenService;
+    private final String BEARER_PREFIX = "Bearer ";
 
     @GetMapping("login/{provider}")
     public ResponseEntity oauthLogin(@PathVariable String provider, @RequestParam String code) {
         LoginSuccess loginSuccess = oauthService.login(provider, code);
+
+        String accessToken = loginSuccess.getAccessToken();
 
         Long refreshTokenExpirationInMilliseconds = jwtTokenService.getTokenExpirationInMilliseconds(loginSuccess.getRefreshToken());
         Long refreshTokenExpirationFromNowInSeconds = calTokenExpirationFromNowInSeconds(refreshTokenExpirationInMilliseconds);
@@ -36,6 +39,7 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
                 .body(new LoginResponse(loginSuccess, refreshTokenExpirationInMilliseconds));
     }
 
@@ -58,7 +62,8 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new RefreshResponse(newAccessToken, newRefreshTokenExpirationInMilliseconds));
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + newAccessToken)
+                .body(new RefreshResponse(newRefreshTokenExpirationInMilliseconds));
     }
 
     private Long calTokenExpirationFromNowInSeconds(Long tokenExpirationInMilliSeconds) {
