@@ -16,6 +16,9 @@ import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+
+//JwtTokenProvider 는 secret key 값을 가지고 있는 객체로 이를 필요로 하는 다양한 곳에서 활용됩니다.
+//따라서 순환 의존성을 가지지 않도록 JwtTokenProvider 에는 추가적인 의존성을 가지지 않는 것을 권장합니다.
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {

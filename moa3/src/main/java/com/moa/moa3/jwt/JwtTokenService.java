@@ -15,33 +15,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class JwtTokenService {
-
-    private final MemberService memberService;
-    private final JwtTokenValidator jwtTokenValidator;
     private final JwtTokenProvider jwtTokenProvider;
     private final AccessTokenService accessTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final AuthenticationService authenticationService;
 
 
-    private Authentication createAuthentication(String token) {
-        jwtTokenValidator.validateToken(token);
-        Claims claims = jwtTokenProvider.getClaims(token);
-
-        Collection<? extends GrantedAuthority> authorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList(claims.get("authorities").toString());
-        Long memberId = claims.get("memberId", Long.class);
-
-        Member member = memberService.findById(memberId);
-        MemberDetails memberDetails = new MemberDetails(member);
-
-        return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
-    }
 
     private AtRtSuccess createAtRt(Authentication authentication) {
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
@@ -62,9 +48,8 @@ public class JwtTokenService {
     }
 
     public AtRtSuccess refresh(String refreshToken) {
-        jwtTokenValidator.validateRefreshToken(refreshToken);
-        Authentication authentication = createAuthentication(refreshToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication =
+                authenticationService.createAuthenticationWithRt(refreshToken);
 
         String oldAccessToken = refreshTokenService.getAt(refreshToken);
         accessTokenService.deleteAt(oldAccessToken);
@@ -72,15 +57,8 @@ public class JwtTokenService {
 
         return createAtRt(authentication);
     }
-    
-
-    public Authentication createAuthenticationWithAt(String accessToken) {
-        jwtTokenValidator.validateAccessToken(accessToken);
-        return createAuthentication(accessToken);
-    }
 
     private Long getTokenExpirationInMilliseconds(String token) {
-        jwtTokenValidator.validateToken(token);
         Claims claims = jwtTokenProvider.getClaims(token);
         return claims.getExpiration().getTime();
     }

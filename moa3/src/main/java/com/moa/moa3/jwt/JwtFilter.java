@@ -19,7 +19,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private final JwtTokenService jwtTokenService;
+    private final AuthenticationService authenticationService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -28,7 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             if (accessToken != null) {
-                Authentication authentication = jwtTokenService.createAuthenticationWithAt(accessToken);
+                Authentication authentication = authenticationService.createAuthenticationWithAt(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
