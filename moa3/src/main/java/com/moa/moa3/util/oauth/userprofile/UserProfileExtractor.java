@@ -11,7 +11,6 @@ public enum UserProfileExtractor {
         @Override
         public UserProfile of(Map<String, Object> attributes) {
             return UserProfile.builder()
-                    .oAuthId(String.valueOf(attributes.get("id")))
                     .email(String.valueOf(attributes.get("email")))
                     .name(String.valueOf(attributes.get("name")))
                     .imageUrl(String.valueOf(attributes.get("avatar_url")))

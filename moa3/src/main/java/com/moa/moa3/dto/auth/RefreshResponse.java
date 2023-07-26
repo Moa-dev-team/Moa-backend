@@ -4,11 +4,9 @@ import lombok.Data;
 
 @Data
 public class RefreshResponse {
-    private String accessToken;
     private Long refreshTokenExpirationInMilliSeconds;
 
-    public RefreshResponse(String accessToken, Long refreshTokenExpirationInMilliSeconds) {
-        this.accessToken = accessToken;
+    public RefreshResponse(Long refreshTokenExpirationInMilliSeconds) {
         this.refreshTokenExpirationInMilliSeconds = refreshTokenExpirationInMilliSeconds;
     }
 }
