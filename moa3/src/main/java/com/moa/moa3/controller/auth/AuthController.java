@@ -2,7 +2,7 @@ package com.moa.moa3.controller.auth;
 
 import com.moa.moa3.dto.auth.LoginResponse;
 import com.moa.moa3.dto.auth.RefreshResponse;
-import com.moa.moa3.dto.jwt.AtRt;
+import com.moa.moa3.dto.jwt.AtRtSuccess;
 import com.moa.moa3.dto.oauth.*;
 import com.moa.moa3.jwt.JwtTokenService;
 import com.moa.moa3.service.oauth.OAuthService;
@@ -18,21 +18,23 @@ import java.util.Date;
 public class AuthController {
 
     private final OAuthService oauthService;
-    private final JwtTokenService jwtTokenService;
     private final String BEARER_PREFIX = "Bearer ";
 
     @GetMapping("login/{provider}")
     public ResponseEntity oauthLogin(@PathVariable String provider, @RequestParam String code) {
         LoginSuccess loginSuccess = oauthService.login(provider, code);
 
-        String accessToken = loginSuccess.getAccessToken();
+        String accessToken = loginSuccess.getAtRtSuccess().getAccessToken();
+        String refreshToken = loginSuccess.getAtRtSuccess().getRefreshToken();
+        Long refreshTokenExpirationInMilliseconds =
+                loginSuccess.getAtRtSuccess().getRefreshTokenExpirationInMilliseconds();
+        Long refreshTokenExpirationFromNowInSeconds =
+                loginSuccess.getAtRtSuccess().getRefreshTokenExpirationFromNowInSeconds();
 
-        Long refreshTokenExpirationInMilliseconds = jwtTokenService.getTokenExpirationInMilliseconds(loginSuccess.getRefreshToken());
-        Long refreshTokenExpirationFromNowInSeconds = calTokenExpirationFromNowInSeconds(refreshTokenExpirationInMilliseconds);
-
-        HttpCookie cookie = ResponseCookie.from("refreshToken", loginSuccess.getRefreshToken())
+        HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .path("/")
-                .maxAge(refreshTokenExpirationFromNowInSeconds)
+                // 쿠키의 만료시간을 10분 일찍 끝나도록 설정하였습니다.
+                .maxAge(refreshTokenExpirationFromNowInSeconds - 600)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
@@ -45,13 +47,11 @@ public class AuthController {
 
     @GetMapping("refresh")
     public ResponseEntity oauthRefresh(@CookieValue String refreshToken) {
-        AtRt atRt = oauthService.refresh(refreshToken);
+        AtRtSuccess atRtSuccess = oauthService.refresh(refreshToken);
 
-        String newAccessToken = atRt.getAccessToken();
-        String newRefreshToken = atRt.getRefreshToken();
-
-        Long newRefreshTokenExpirationInMilliseconds = jwtTokenService.getTokenExpirationInMilliseconds(newRefreshToken);
-        Long newRefreshTokenExpirationFromNowInSeconds = calTokenExpirationFromNowInSeconds(newRefreshTokenExpirationInMilliseconds);
+        String newAccessToken = atRtSuccess.getAccessToken();
+        Long newRefreshTokenExpirationInMilliseconds = atRtSuccess.getRefreshTokenExpirationInMilliseconds();
+        Long newRefreshTokenExpirationFromNowInSeconds = atRtSuccess.getRefreshTokenExpirationFromNowInSeconds();
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .path("/")
@@ -66,9 +66,4 @@ public class AuthController {
                 .body(new RefreshResponse(newRefreshTokenExpirationInMilliseconds));
     }
 
-    private Long calTokenExpirationFromNowInSeconds(Long tokenExpirationInMilliSeconds) {
-        // refreshToken 이 만료하는 시간보다 10분 일찍 쿠키 수명이 끝나도록 설정
-        long t =  (tokenExpirationInMilliSeconds - (new Date().getTime())) / 1000;
-        return Math.max(t - 600, 0);
-    }
 }

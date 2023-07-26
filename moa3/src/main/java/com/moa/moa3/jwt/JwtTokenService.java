@@ -1,6 +1,6 @@
 package com.moa.moa3.jwt;
 
-import com.moa.moa3.dto.jwt.AtRt;
+import com.moa.moa3.dto.jwt.AtRtSuccess;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.service.member.MemberService;
@@ -43,16 +43,17 @@ public class JwtTokenService {
         return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
     }
 
-    private AtRt createAtRt(Authentication authentication) {
+    private AtRtSuccess createAtRt(Authentication authentication) {
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+        Long refreshTokenExpirationInMilliseconds = getTokenExpirationInMilliseconds(refreshToken);
 
         accessTokenService.mapAtToRt(accessToken, refreshToken);
         refreshTokenService.mapRtToAt(refreshToken, accessToken);
-        return new AtRt(accessToken, refreshToken);
+        return new AtRtSuccess(accessToken, refreshToken, refreshTokenExpirationInMilliseconds);
     }
 
-    public AtRt createAtRt(Member member) {
+    public AtRtSuccess createAtRt(Member member) {
         MemberDetails memberDetails = new MemberDetails(member);
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
@@ -60,7 +61,7 @@ public class JwtTokenService {
         return createAtRt(authentication);
     }
 
-    public AtRt refresh(String refreshToken) {
+    public AtRtSuccess refresh(String refreshToken) {
         jwtTokenValidator.validateRefreshToken(refreshToken);
         Authentication authentication = createAuthentication(refreshToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -78,7 +79,7 @@ public class JwtTokenService {
         return createAuthentication(accessToken);
     }
 
-    public Long getTokenExpirationInMilliseconds(String token) {
+    private Long getTokenExpirationInMilliseconds(String token) {
         jwtTokenValidator.validateToken(token);
         Claims claims = jwtTokenProvider.getClaims(token);
         return claims.getExpiration().getTime();

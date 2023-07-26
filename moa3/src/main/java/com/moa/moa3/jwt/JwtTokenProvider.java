@@ -1,9 +1,6 @@
 package com.moa.moa3.jwt;
 
-import com.moa.moa3.dto.jwt.AtRt;
 import com.moa.moa3.security.MemberDetails;
-import com.moa.moa3.service.redis.AccessTokenService;
-import com.moa.moa3.service.redis.RefreshTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

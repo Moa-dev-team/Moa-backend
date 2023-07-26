@@ -1,7 +1,7 @@
 package com.moa.moa3.service.oauth;
 
 import com.moa.moa3.api.oauth.OAuthApi;
-import com.moa.moa3.dto.jwt.AtRt;
+import com.moa.moa3.dto.jwt.AtRtSuccess;
 import com.moa.moa3.dto.oauth.*;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.jwt.JwtTokenService;
@@ -26,12 +26,12 @@ public class OAuthService {
         UserProfile userProfile = getUserProfile(provider, code);
 
         Member member = memberService.getOrCreateMember(userProfile, provider);
-        AtRt atRt = jwtTokenService.createAtRt(member);
+        AtRtSuccess atRtSuccess = jwtTokenService.createAtRt(member);
 
-        return new LoginSuccess(member, atRt);
+        return new LoginSuccess(member, atRtSuccess);
     }
 
-    public AtRt refresh(String refreshToken) {
+    public AtRtSuccess refresh(String refreshToken) {
         return jwtTokenService.refresh(refreshToken);
     }
 
