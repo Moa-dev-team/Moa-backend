@@ -1,6 +1,7 @@
 package com.moa.moa3.validation.jwt;
 
 import com.moa.moa3.exception.jwt.InvalidTokenRequestException;
+import com.moa.moa3.jwt.JwtTokenProvider;
 import com.moa.moa3.jwt.JwtTokenService;
 import com.moa.moa3.repository.member.MemberRepository;
 import com.moa.moa3.service.redis.AccessTokenService;
@@ -23,23 +24,13 @@ import java.security.Key;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenValidator {
-    @Value("${jwt.secret}")
-    private String secretKey;
-    private Key key;
-
-    @PostConstruct
-    protected void init() {
-        key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
     private final AccessTokenService accessTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public boolean validateToken(String jwtToken) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(jwtToken);
+            jwtTokenProvider.getClaims(jwtToken);
         } catch (SignatureException e) {
             log.error("Invalid JWT signature.");
             throw new InvalidTokenRequestException("JWT", jwtToken, "Invalid JWT signature.");
