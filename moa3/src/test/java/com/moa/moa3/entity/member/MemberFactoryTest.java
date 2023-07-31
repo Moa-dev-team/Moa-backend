@@ -17,8 +17,8 @@ class MemberFactoryTest {
     MemberFactory memberFactory;
     @Test
     public void memberFactory() {
-        Member user = memberFactory.createUser("test", "test@com", "test.com", "test");
-        Member admin = memberFactory.createAdmin("test", "test@com", "test.com", "test");
+        Member user = memberFactory.createUser("test", "test1@com", "test.com", "test");
+        Member admin = memberFactory.createAdmin("test", "test2@com", "test.com", "test");
 
         assertThat(user.getName()).isEqualTo("test");
         assertThat(user.getAuthorities().size()).isEqualTo(1);
