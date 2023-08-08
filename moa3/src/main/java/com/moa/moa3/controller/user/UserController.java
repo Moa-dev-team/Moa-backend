@@ -2,6 +2,7 @@ package com.moa.moa3.controller.user;
 
 import com.moa.moa3.repository.member.MemberRepository;
 import com.moa.moa3.security.MemberDetails;
+import com.moa.moa3.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,17 +14,23 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * /user/** 패턴을 따르는 api 는 모두 적절한 access token 으로 인증되어 authentication 객체가 생성되었음이 보장됩니다.<br>
+ * 따라서 authentication 을 간편하게 불러와서 인증 사용자에 접근할 수 있습니다.
+ */
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
+    private final MemberService memberService;
+
     @GetMapping("/profile")
-    public ResponseEntity getProfile(@RequestHeader("Authorization") String accessTokenInHeader) {
-
-    }
-
-    private String parseToken(String accessTokenInHeader) {
-        return accessTokenInHeader.substring(7);
+    public ResponseEntity getProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(memberService.getMemberProfile(memberDetails.getMemberId()));
     }
 }

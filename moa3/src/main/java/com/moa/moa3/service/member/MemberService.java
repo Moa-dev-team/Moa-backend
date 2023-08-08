@@ -6,7 +6,10 @@ import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.entity.member.MemberFactory;
 import com.moa.moa3.exception.oauth.DuplicateLoginFailureException;
 import com.moa.moa3.repository.member.MemberRepository;
+import com.moa.moa3.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +50,10 @@ public class MemberService {
         );
     }
 
-    public MemberProfileResponse getMemberProfile(Member member) {
+    public MemberProfileResponse getMemberProfile(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+        );
         return new MemberProfileResponse(member);
     }
 }
