@@ -4,7 +4,7 @@ import com.moa.moa3.api.oauth.OAuthApi;
 import com.moa.moa3.dto.jwt.AtRtSuccess;
 import com.moa.moa3.dto.oauth.*;
 import com.moa.moa3.entity.member.Member;
-import com.moa.moa3.jwt.JwtTokenService;
+import com.moa.moa3.service.jwt.JwtTokenService;
 import com.moa.moa3.service.member.MemberService;
 import com.moa.moa3.util.oauth.OAuthProvider;
 import com.moa.moa3.util.oauth.OAuthProviderFactory;

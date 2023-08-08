@@ -4,13 +4,10 @@ import com.moa.moa3.dto.auth.LoginResponse;
 import com.moa.moa3.dto.auth.RefreshResponse;
 import com.moa.moa3.dto.jwt.AtRtSuccess;
 import com.moa.moa3.dto.oauth.*;
-import com.moa.moa3.jwt.JwtTokenService;
 import com.moa.moa3.service.oauth.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")

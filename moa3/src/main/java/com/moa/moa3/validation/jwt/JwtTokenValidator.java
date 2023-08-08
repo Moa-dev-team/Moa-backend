@@ -2,23 +2,15 @@ package com.moa.moa3.validation.jwt;
 
 import com.moa.moa3.exception.jwt.InvalidTokenRequestException;
 import com.moa.moa3.jwt.JwtTokenProvider;
-import com.moa.moa3.jwt.JwtTokenService;
-import com.moa.moa3.repository.member.MemberRepository;
 import com.moa.moa3.service.redis.AccessTokenService;
 import com.moa.moa3.service.redis.RefreshTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.security.Key;
 
 @Component
 @RequiredArgsConstructor
