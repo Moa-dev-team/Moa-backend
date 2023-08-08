@@ -1,7 +1,9 @@
-package com.moa.moa3.jwt;
+package com.moa.moa3.service.jwt;
 
 import com.moa.moa3.dto.jwt.AtRtSuccess;
 import com.moa.moa3.entity.member.Member;
+import com.moa.moa3.jwt.AuthenticationService;
+import com.moa.moa3.jwt.JwtTokenProvider;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.service.member.MemberService;
 import com.moa.moa3.service.redis.AccessTokenService;
