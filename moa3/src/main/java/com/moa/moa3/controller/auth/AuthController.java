@@ -47,10 +47,11 @@ public class AuthController {
         AtRtSuccess atRtSuccess = oauthService.refresh(refreshToken);
 
         String newAccessToken = atRtSuccess.getAccessToken();
+        String newRefreshToken = atRtSuccess.getRefreshToken();
         Long newRefreshTokenExpirationInMilliseconds = atRtSuccess.getRefreshTokenExpirationInMilliseconds();
         Long newRefreshTokenExpirationFromNowInSeconds = atRtSuccess.getRefreshTokenExpirationFromNowInSeconds();
 
-        HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+        HttpCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
                 .path("/")
                 .maxAge(newRefreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
