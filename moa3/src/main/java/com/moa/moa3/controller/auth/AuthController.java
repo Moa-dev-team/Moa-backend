@@ -63,4 +63,23 @@ public class AuthController {
                 .body(new RefreshResponse(newRefreshTokenExpirationInMilliseconds));
     }
 
+    @GetMapping("logout")
+    public ResponseEntity oauthLogout(@RequestHeader("Authorization") String accessTokenInHeader,
+                                      @CookieValue String refreshToken) {
+        String accessToken = getAccessToken(accessTokenInHeader);
+        oauthService.logout(accessToken, refreshToken);
+
+        HttpCookie cookie = ResponseCookie.from("refreshToken", "")
+                .maxAge(0)
+                .path("/")
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("logout success");
+    }
+
+    private String getAccessToken(String accessTokenInHeader) {
+        return accessTokenInHeader.substring(BEARER_PREFIX.length());
+    }
 }
