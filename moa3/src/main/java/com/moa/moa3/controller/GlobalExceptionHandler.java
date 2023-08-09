@@ -9,6 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -16,7 +17,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             IllegalArgumentException.class,
             NotFoundProviderException.class,
-            DuplicateLoginFailureException.class
+            DuplicateLoginFailureException.class,
+            ResponseStatusException.class
     })
     @ResponseBody
     public ResponseEntity<Object> handleBadRequestException(Exception ex) {

@@ -1,11 +1,15 @@
 package com.moa.moa3.service.member;
 
+import com.moa.moa3.dto.member.MemberProfileResponse;
 import com.moa.moa3.dto.oauth.UserProfile;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.entity.member.MemberFactory;
 import com.moa.moa3.exception.oauth.DuplicateLoginFailureException;
 import com.moa.moa3.repository.member.MemberRepository;
+import com.moa.moa3.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +21,6 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberFactory memberFactory;
-
 
     @Transactional
     public Member getOrCreateMember(UserProfile userProfile, String provider) {
@@ -45,5 +48,12 @@ public class MemberService {
         return memberRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
         );
+    }
+
+    public MemberProfileResponse getMemberProfile(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+        );
+        return new MemberProfileResponse(member);
     }
 }

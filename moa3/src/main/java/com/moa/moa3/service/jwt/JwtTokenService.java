@@ -1,7 +1,9 @@
-package com.moa.moa3.jwt;
+package com.moa.moa3.service.jwt;
 
-import com.moa.moa3.dto.jwt.AtRt;
+import com.moa.moa3.dto.jwt.AtRtSuccess;
 import com.moa.moa3.entity.member.Member;
+import com.moa.moa3.jwt.AuthenticationService;
+import com.moa.moa3.jwt.JwtTokenProvider;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.service.member.MemberService;
 import com.moa.moa3.service.redis.AccessTokenService;
@@ -15,44 +17,31 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class JwtTokenService {
-
-    private final MemberService memberService;
-    private final JwtTokenValidator jwtTokenValidator;
     private final JwtTokenProvider jwtTokenProvider;
     private final AccessTokenService accessTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final AuthenticationService authenticationService;
 
 
-    private Authentication createAuthentication(String token) {
-        jwtTokenValidator.validateToken(token);
-        Claims claims = jwtTokenProvider.getClaims(token);
 
-        Collection<? extends GrantedAuthority> authorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList(claims.get("authorities").toString());
-        Long memberId = claims.get("memberId", Long.class);
-
-        Member member = memberService.findById(memberId);
-        MemberDetails memberDetails = new MemberDetails(member);
-
-        return new UsernamePasswordAuthenticationToken(memberDetails, token, authorities);
-    }
-
-    private AtRt createAtRt(Authentication authentication) {
+    private AtRtSuccess createAtRt(Authentication authentication) {
         String accessToken = jwtTokenProvider.createAccessToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
+        Long refreshTokenExpirationInMilliseconds = getTokenExpirationInMilliseconds(refreshToken);
 
         accessTokenService.mapAtToRt(accessToken, refreshToken);
         refreshTokenService.mapRtToAt(refreshToken, accessToken);
-        return new AtRt(accessToken, refreshToken);
+        return new AtRtSuccess(accessToken, refreshToken, refreshTokenExpirationInMilliseconds);
     }
 
-    public AtRt createAtRt(Member member) {
+    public AtRtSuccess createAtRt(Member member) {
         MemberDetails memberDetails = new MemberDetails(member);
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
@@ -60,10 +49,9 @@ public class JwtTokenService {
         return createAtRt(authentication);
     }
 
-    public AtRt refresh(String refreshToken) {
-        jwtTokenValidator.validateRefreshToken(refreshToken);
-        Authentication authentication = createAuthentication(refreshToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    public AtRtSuccess refresh(String refreshToken) {
+        Authentication authentication =
+                authenticationService.createAuthenticationWithRt(refreshToken);
 
         String oldAccessToken = refreshTokenService.getAt(refreshToken);
         accessTokenService.deleteAt(oldAccessToken);
@@ -71,15 +59,8 @@ public class JwtTokenService {
 
         return createAtRt(authentication);
     }
-    
 
-    public Authentication createAuthenticationWithAt(String accessToken) {
-        jwtTokenValidator.validateAccessToken(accessToken);
-        return createAuthentication(accessToken);
-    }
-
-    public Long getTokenExpirationInMilliseconds(String token) {
-        jwtTokenValidator.validateToken(token);
+    private Long getTokenExpirationInMilliseconds(String token) {
         Claims claims = jwtTokenProvider.getClaims(token);
         return claims.getExpiration().getTime();
     }
