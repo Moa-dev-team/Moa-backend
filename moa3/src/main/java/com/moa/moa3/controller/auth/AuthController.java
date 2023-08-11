@@ -88,6 +88,8 @@ public class AuthController {
     }
 
     private String getAccessToken(String accessTokenInHeader) {
+        if (accessTokenInHeader.length() < BEARER_PREFIX.length())
+            return "";
         return accessTokenInHeader.substring(BEARER_PREFIX.length());
     }
 }
