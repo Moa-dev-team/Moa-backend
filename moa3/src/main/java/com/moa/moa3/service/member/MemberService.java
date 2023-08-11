@@ -50,6 +50,7 @@ public class MemberService {
         );
     }
 
+    // 향후 로직이 복잡해지면 querydsl 과 @QueryProjection 을 사용해 dto 만 조회하는 방법으로 변경하겠습니다.
     public MemberProfileResponse getMemberProfile(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")

@@ -56,6 +56,8 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
 
+        http.cors((cors) -> {});
+
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)

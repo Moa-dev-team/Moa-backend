@@ -30,8 +30,7 @@ public class AuthController {
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .path("/")
-                // 쿠키의 만료시간을 10분 일찍 끝나도록 설정하였습니다.
-                .maxAge(refreshTokenExpirationFromNowInSeconds - 600)
+                .maxAge(refreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
@@ -47,10 +46,11 @@ public class AuthController {
         AtRtSuccess atRtSuccess = oauthService.refresh(refreshToken);
 
         String newAccessToken = atRtSuccess.getAccessToken();
+        String newRefreshToken = atRtSuccess.getRefreshToken();
         Long newRefreshTokenExpirationInMilliseconds = atRtSuccess.getRefreshTokenExpirationInMilliseconds();
         Long newRefreshTokenExpirationFromNowInSeconds = atRtSuccess.getRefreshTokenExpirationFromNowInSeconds();
 
-        HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+        HttpCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
                 .path("/")
                 .maxAge(newRefreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
@@ -63,4 +63,32 @@ public class AuthController {
                 .body(new RefreshResponse(newRefreshTokenExpirationInMilliseconds));
     }
 
+    /**
+     * at 가 포함되지 않은 경우 아무일도 하지 않습니다.<br>
+     * rt 가 포함되지 않은 경우 "refreshToken" 이라는 cookie 를 만료시키고 아무일도 하지 않습니다.
+     * @param accessTokenInHeader
+     * @param refreshToken
+     * @return
+     */
+    @GetMapping("logout")
+    public ResponseEntity oauthLogout(@RequestHeader("Authorization") String accessTokenInHeader,
+                                      @CookieValue String refreshToken) {
+        String accessToken = getAccessToken(accessTokenInHeader);
+        oauthService.logout(accessToken, refreshToken);
+
+        HttpCookie cookie = ResponseCookie.from("refreshToken", "")
+                .maxAge(0)
+                .path("/")
+                .build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("logout success");
+    }
+
+    private String getAccessToken(String accessTokenInHeader) {
+        if (accessTokenInHeader.length() < BEARER_PREFIX.length())
+            return "";
+        return accessTokenInHeader.substring(BEARER_PREFIX.length());
+    }
 }
