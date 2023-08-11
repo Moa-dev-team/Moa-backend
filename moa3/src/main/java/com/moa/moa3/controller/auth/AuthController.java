@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @GetMapping("refresh")
-    public ResponseEntity oauthRefresh(@CookieValue String refreshToken) {
+    public ResponseEntity oauthRefresh(@CookieValue(required = false) String refreshToken) {
         AtRtSuccess atRtSuccess = oauthService.refresh(refreshToken);
 
         String newAccessToken = atRtSuccess.getAccessToken();
