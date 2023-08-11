@@ -64,6 +64,13 @@ public class AuthController {
                 .body(new RefreshResponse(newRefreshTokenExpirationInMilliseconds));
     }
 
+    /**
+     * at 가 포함되지 않은 경우 아무일도 하지 않습니다.<br>
+     * rt 가 포함되지 않은 경우 "refreshToken" 이라는 cookie 를 만료시키고 아무일도 하지 않습니다.
+     * @param accessTokenInHeader
+     * @param refreshToken
+     * @return
+     */
     @GetMapping("logout")
     public ResponseEntity oauthLogout(@RequestHeader("Authorization") String accessTokenInHeader,
                                       @CookieValue String refreshToken) {
