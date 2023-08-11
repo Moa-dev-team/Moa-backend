@@ -30,8 +30,7 @@ public class AuthController {
 
         HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .path("/")
-                // 쿠키의 만료시간을 10분 일찍 끝나도록 설정하였습니다.
-                .maxAge(refreshTokenExpirationFromNowInSeconds - 600)
+                .maxAge(refreshTokenExpirationFromNowInSeconds)
 //                .secure(true)
                 .httpOnly(true)
                 .build();
