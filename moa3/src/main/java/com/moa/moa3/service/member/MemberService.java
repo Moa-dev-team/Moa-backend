@@ -1,5 +1,7 @@
 package com.moa.moa3.service.member;
 
+import com.moa.moa3.dto.member.MemberListResponse;
+import com.moa.moa3.dto.member.MemberProfile;
 import com.moa.moa3.dto.member.MemberProfileResponse;
 import com.moa.moa3.dto.oauth.UserProfile;
 import com.moa.moa3.entity.member.Member;
@@ -13,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,5 +59,11 @@ public class MemberService {
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
         );
         return new MemberProfileResponse(member);
+    }
+
+    public MemberListResponse getMemberList(String cursor, int limit) {
+        List<MemberProfile> membersAfterCursor = memberRepository.getMembersAfterCursor(cursor, limit);
+        String newCursor = membersAfterCursor.isEmpty() ? null : membersAfterCursor.get(membersAfterCursor.size() - 1).getUpdatedAt().toString();
+        return new MemberListResponse(newCursor, membersAfterCursor);
     }
 }

@@ -7,5 +7,10 @@ import java.util.List;
 @Data
 public class MemberListResponse {
     String cursor;
-    List<MemberProfileResponse> members;
+    List<MemberProfile> members;
+
+    public MemberListResponse(String cursor, List<MemberProfile> members) {
+        this.cursor = cursor;
+        this.members = members;
+    }
 }
