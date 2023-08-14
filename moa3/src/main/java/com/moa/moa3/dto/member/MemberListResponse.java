@@ -6,11 +6,8 @@ import java.util.List;
 
 @Data
 public class MemberListResponse {
-    String cursor;
     List<MemberProfile> members;
-
-    public MemberListResponse(String cursor, List<MemberProfile> members) {
-        this.cursor = cursor;
+    public MemberListResponse(List<MemberProfile> members) {
         this.members = members;
     }
 }
