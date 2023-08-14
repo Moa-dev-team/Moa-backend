@@ -1,5 +1,7 @@
 package com.moa.moa3.repository.member;
 
+import com.moa.moa3.dto.member.MemberProfile;
+import com.moa.moa3.dto.member.QMemberProfile;
 import com.moa.moa3.entity.member.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -42,17 +44,19 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
     }
 
     @Override
-    public List<Member> getMembersAfterCursor(String cursor, int limit) {
+    public List<MemberProfile> getMembersAfterCursor(String cursor, int limit) {
         if (cursor == null) {
             return query
-                    .selectFrom(member)
+                    .select(new QMemberProfile(member.name, member.email, member.imageUrl))
+                    .from(member)
                     .orderBy(member.updatedAt.desc())
                     .limit(limit)
                     .fetch();
         } else {
             LocalDateTime cursorDateTime = LocalDateTime.parse(cursor);
             return query
-                    .selectFrom(member)
+                    .select(new QMemberProfile(member.name, member.email, member.imageUrl))
+                    .from(member)
                     .where(member.updatedAt.lt(cursorDateTime))
                     .orderBy(member.updatedAt.desc())
                     .limit(limit)
