@@ -67,7 +67,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/auth/**").permitAll()
+                authorize.requestMatchers("/auth/**", "/global/**").permitAll()
                         .requestMatchers("/user", "/user/**").hasAuthority("ROLE_USER")
                         .requestMatchers(PUBLIC_MATCHERS).permitAll()
                         .requestMatchers(SWAGGER_MATCHERS).permitAll()
