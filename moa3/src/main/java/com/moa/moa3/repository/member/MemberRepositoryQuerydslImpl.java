@@ -47,7 +47,7 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
     public List<MemberProfile> getMembersAfterCursor(String cursor, int limit) {
         if (cursor == null) {
             return query
-                    .select(new QMemberProfile(member.name, member.email, member.imageUrl))
+                    .select(new QMemberProfile(member.name, member.email, member.imageUrl, member.updatedAt))
                     .from(member)
                     .orderBy(member.updatedAt.desc())
                     .limit(limit)
@@ -55,7 +55,7 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
         } else {
             LocalDateTime cursorDateTime = LocalDateTime.parse(cursor);
             return query
-                    .select(new QMemberProfile(member.name, member.email, member.imageUrl))
+                    .select(new QMemberProfile(member.name, member.email, member.imageUrl, member.updatedAt))
                     .from(member)
                     .where(member.updatedAt.lt(cursorDateTime))
                     .orderBy(member.updatedAt.desc())
