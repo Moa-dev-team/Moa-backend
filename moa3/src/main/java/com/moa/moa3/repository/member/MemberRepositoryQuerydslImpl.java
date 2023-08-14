@@ -7,6 +7,10 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 import static com.moa.moa3.entity.member.QMember.*;
@@ -36,4 +40,24 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
                         .fetchFirst()
         );
     }
+
+    @Override
+    public List<Member> getMembersAfterCursor(String cursor, int limit) {
+        if (cursor == null) {
+            return query
+                    .selectFrom(member)
+                    .orderBy(member.updatedAt.desc())
+                    .limit(limit)
+                    .fetch();
+        } else {
+            LocalDateTime cursorDateTime = LocalDateTime.parse(cursor);
+            return query
+                    .selectFrom(member)
+                    .where(member.updatedAt.lt(cursorDateTime))
+                    .orderBy(member.updatedAt.desc())
+                    .limit(limit)
+                    .fetch();
+        }
+    }
+
 }
