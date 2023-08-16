@@ -3,6 +3,7 @@ package com.moa.moa3.repository.member;
 import com.moa.moa3.dto.member.MemberProfile;
 import com.moa.moa3.dto.member.QMemberProfile;
 import com.moa.moa3.entity.member.Member;
+import com.mysema.commons.lang.Pair;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

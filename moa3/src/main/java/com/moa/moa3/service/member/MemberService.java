@@ -62,6 +62,8 @@ public class MemberService {
     }
 
     public MemberListResponse getMemberList(String cursor, int limit) {
-        return new MemberListResponse(memberRepository.getMembersAfterCursor(cursor, limit));
+        List<MemberProfile> members = memberRepository.getMembersAfterCursor(cursor, limit);
+        String nextCursor = members.size() == 0 ? null : members.get(members.size() - 1).getUpdatedAt().toString();
+        return new MemberListResponse(members, nextCursor);
     }
 }
