@@ -8,9 +8,11 @@ import java.util.List;
 public class MemberListResponse {
     List<MemberProfile> members;
     String nextCursor;
+    boolean nextPage = true;
 
-    public MemberListResponse(List<MemberProfile> members,String nextCursor) {
+    public MemberListResponse(List<MemberProfile> members,String nextCursor, boolean nextPage) {
         this.members = members;
         this.nextCursor = nextCursor;
+        this.nextPage = nextPage;
     }
 }
