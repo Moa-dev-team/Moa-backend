@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @GetMapping("refresh")
-    public ResponseEntity oauthRefresh(@CookieValue String refreshToken) {
+    public ResponseEntity oauthRefresh(@CookieValue(required = false) String refreshToken) {
         AtRtSuccess atRtSuccess = oauthService.refresh(refreshToken);
 
         String newAccessToken = atRtSuccess.getAccessToken();
@@ -71,8 +71,8 @@ public class AuthController {
      * @return
      */
     @GetMapping("logout")
-    public ResponseEntity oauthLogout(@RequestHeader("Authorization") String accessTokenInHeader,
-                                      @CookieValue String refreshToken) {
+    public ResponseEntity oauthLogout(@RequestHeader(value = "Authorization", required = false) String accessTokenInHeader,
+                                      @CookieValue(required = false) String refreshToken) {
         String accessToken = getAccessToken(accessTokenInHeader);
         oauthService.logout(accessToken, refreshToken);
 
