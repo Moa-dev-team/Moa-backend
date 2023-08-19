@@ -32,6 +32,9 @@ public class Member extends BaseEntity {
 
     private String oAuthProvider;
     private boolean firstLogin;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Profile profile;
     public void setFirstLogin(boolean firstLogin){
         this.firstLogin = firstLogin;
     }
