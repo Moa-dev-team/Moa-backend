@@ -68,6 +68,7 @@ public class MemberService {
         return new MemberListResponse(members, nextCursor);
     }
 
+    @Transactional
     public void updateMemberProfile(Long memberId, ProfileModifyRequest profileModifyRequest) {
         Member member = memberRepository.findByIdWithProfile(memberId).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
