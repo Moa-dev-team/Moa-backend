@@ -1,23 +1,22 @@
 package com.moa.moa3.entity.member.profile;
 
-import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Entity
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Category {
-    @Id @GeneratedValue
-    @Column(name = "category_id")
-    private Long id;
-    private String name;
-    public Category(String name) {
+public enum Category {
+    PYTHON("Python"), JAVA("Java"), REACT("React"), JAVASCRIPT("JavaScript"), SPRING("Spring");
+
+    private final String name;
+    Category(String name) {
         this.name = name;
     }
-    
-    @OneToMany(mappedBy = "category")
-    private List<ProfileSkill> profileSkills;
+
+    static public Category of(String name) {
+        for(Category category : Category.values()) {
+            if(category.getName().equals(name)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("No such category exists");
+    }
 }

@@ -1,20 +1,18 @@
 package com.moa.moa3.entity.member.profile;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
-/**
- * Profile 과 Skill 는 N:N 관계입니다. <br>
- * ProfileSkill 는 그 중간 테이블입니다.
- */
 @Entity
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class ProfileSkill {
     @Id @GeneratedValue
+    @Column(name = "profile_skill_id")
     private Long id;
 
-    @ManyToOne
-    private Profile profile;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @Enumerated(EnumType.STRING)
     private Category skill;
+    public ProfileSkill(Category skill) {
+        this.skill = skill;
+    }
 }
