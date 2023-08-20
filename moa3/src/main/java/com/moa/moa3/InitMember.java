@@ -6,12 +6,11 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Profile("local")
 @Component
 @RequiredArgsConstructor
-public class InitDB {
+public class InitMember {
     private final InitService initService;
 
     @PostConstruct

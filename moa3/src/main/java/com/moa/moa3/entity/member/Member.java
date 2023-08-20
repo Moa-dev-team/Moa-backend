@@ -1,6 +1,7 @@
 package com.moa.moa3.entity.member;
 
 import com.moa.moa3.entity.BaseEntity;
+import com.moa.moa3.entity.member.profile.Profile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,8 +34,13 @@ public class Member extends BaseEntity {
     private String oAuthProvider;
     private boolean firstLogin;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Profile profile;
+    /**
+     * cascade 를 설정했기 때문에 Profile Member data 를 생성하면 Profile 객체도 같이 생성됩니다.
+     * 따라서 Member 객체를 생성하면 Profile 객체를 따로 저장하지 않아도 됩니다.
+     */
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile = new Profile();
     public void setFirstLogin(boolean firstLogin){
         this.firstLogin = firstLogin;
     }
