@@ -17,4 +17,7 @@ public class Category {
     public Category(String name) {
         this.name = name;
     }
+    
+    @OneToMany(mappedBy = "category")
+    private List<ProfileSkill> profileSkills;
 }

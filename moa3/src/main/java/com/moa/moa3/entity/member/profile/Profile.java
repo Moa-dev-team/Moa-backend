@@ -13,5 +13,6 @@ public class Profile {
     @Column(name = "profile_id")
     private Long id;
 
-
+    @OneToMany(mappedBy = "profile")
+    private List<ProfileSkill> profileSkills = new ArrayList<>();
 }
