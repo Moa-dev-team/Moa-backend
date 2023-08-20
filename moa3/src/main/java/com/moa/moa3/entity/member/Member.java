@@ -1,5 +1,6 @@
 package com.moa.moa3.entity.member;
 
+import com.moa.moa3.dto.member.ProfileModifyRequest;
 import com.moa.moa3.entity.BaseEntity;
 import com.moa.moa3.entity.member.profile.Profile;
 import jakarta.persistence.*;
