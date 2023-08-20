@@ -1,9 +1,11 @@
 package com.moa.moa3.entity.member.profile;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class ProfileSkill {
     @Id @GeneratedValue
