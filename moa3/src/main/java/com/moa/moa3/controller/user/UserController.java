@@ -32,7 +32,7 @@ public class UserController {
                 .body(memberService.getMemberProfile(memberDetails.getMemberId()));
     }
 
-    @PostMapping("/profile/modify")
+    @PostMapping("/profile/update")
     public ResponseEntity modifyProfile(@RequestBody ProfileModifyRequest profileModifyRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
