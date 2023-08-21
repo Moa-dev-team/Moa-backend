@@ -3,6 +3,7 @@ package com.moa.moa3.service.member;
 import com.moa.moa3.dto.member.MemberListResponse;
 import com.moa.moa3.dto.member.MemberProfile;
 import com.moa.moa3.dto.member.MemberProfileResponse;
+import com.moa.moa3.dto.member.ProfileModifyRequest;
 import com.moa.moa3.dto.oauth.UserProfile;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.entity.member.MemberFactory;
@@ -65,5 +66,13 @@ public class MemberService {
         List<MemberProfile> members = memberRepository.getMembersAfterCursor(cursor, limit);
         String nextCursor = members.size() == 0 ? null : members.get(members.size() - 1).getUpdatedAt().toString();
         return new MemberListResponse(members, nextCursor);
+    }
+
+    @Transactional
+    public void updateMemberProfile(Long memberId, ProfileModifyRequest profileModifyRequest) {
+        Member member = memberRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+        );
+        member.getProfile().update(profileModifyRequest);
     }
 }

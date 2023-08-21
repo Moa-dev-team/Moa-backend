@@ -65,4 +65,15 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
         }
     }
 
+    @Override
+    public Optional<Member> findByIdWithProfile(Long id) {
+        return Optional.ofNullable(
+                query
+                        .selectFrom(member)
+                        .join(member.profile)
+                        .fetchJoin()
+                        .where(member.id.eq(id))
+                        .fetchFirst()
+        );
+    }
 }

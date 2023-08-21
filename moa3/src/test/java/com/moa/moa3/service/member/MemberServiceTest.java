@@ -1,9 +1,13 @@
 package com.moa.moa3.service.member;
 
 import com.moa.moa3.dto.member.MemberListResponse;
+import com.moa.moa3.dto.member.ProfileModifyRequest;
 import com.moa.moa3.entity.member.Member;
+import com.moa.moa3.entity.member.profile.Category;
+import com.moa.moa3.entity.member.profile.ProfileSkill;
 import com.moa.moa3.repository.member.MemberRepository;
 import jakarta.persistence.EntityManager;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,5 +63,28 @@ class MemberServiceTest {
 
         MemberListResponse nextMemberList = memberService.getMemberList(nextCursor, 5);
         assertThat(nextMemberList.getMembers()).extracting("name").containsExactly("member5", "member4", "member3", "member2");
+    }
+
+    @Test
+    void 맴버_프로빌_변경() {
+        Member member = new Member("member1", "test email 1", "test url", "test");
+        memberRepository.save(member);
+
+        em.flush();
+        em.clear();
+        Member findMember = memberRepository.findByIdWithProfile(member.getId()).get();
+
+        ProfileModifyRequest profileModifyRequest = new ProfileModifyRequest();
+        List<String> skills = List.of("Java", "Spring");
+        profileModifyRequest.setSkills(skills);
+
+        memberService.updateMemberProfile(findMember.getId(), profileModifyRequest);
+
+        em.flush();
+        em.clear();
+
+        Member findMember2 = memberRepository.findByIdWithProfile(member.getId()).get();
+        assertThat(findMember2.getProfile().getSkills().get(0).getSkill()).isEqualTo(Category.JAVA);
+        assertThat(findMember2.getProfile().getSkills().get(1).getSkill()).isEqualTo(Category.SPRING);
     }
 }
