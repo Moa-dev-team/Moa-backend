@@ -1,28 +1,33 @@
 package com.moa.moa3.repository.member;
 
+import com.moa.moa3.dto.global.MembersRequestCondition;
 import com.moa.moa3.dto.member.MemberProfile;
-import com.moa.moa3.dto.member.QMemberProfile;
 import com.moa.moa3.entity.member.Member;
-import com.mysema.commons.lang.Pair;
+import com.moa.moa3.entity.member.profile.Category;
+import com.moa.moa3.entity.member.profile.Profile;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
 import static com.moa.moa3.entity.member.QMember.*;
+import static com.moa.moa3.entity.member.profile.QProfile.profile;
+import static com.moa.moa3.entity.member.profile.QProfileSkill.profileSkill;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
 
     private final JPAQueryFactory query;
+    private final EntityManager em;
 
     @Override
     public Member findByName(String name) {
@@ -46,24 +51,55 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
 
     @Override
     public List<MemberProfile> getMembersAfterCursor(String cursor, int limit) {
-        if (cursor == null) {
-            return query
-                    .select(new QMemberProfile(member.name, member.email, member.imageUrl, member.updatedAt))
-                    .from(member)
-                    .orderBy(member.updatedAt.desc())
-                    .limit(limit)
-                    .fetch();
-        } else {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        if (cursor != null) {
             LocalDateTime cursorDateTime = LocalDateTime.parse(cursor);
-            return query
-                    .select(new QMemberProfile(member.name, member.email, member.imageUrl, member.updatedAt))
-                    .from(member)
-                    .where(member.updatedAt.lt(cursorDateTime))
-                    .orderBy(member.updatedAt.desc())
-                    .limit(limit)
-                    .fetch();
+            whereClause.and(member.updatedAt.lt(cursorDateTime));
         }
+
+        List<Member> result = query
+                .select(member)
+                .from(member)
+                .join(member.profile, profile)
+                .where(whereClause)
+                .orderBy(member.updatedAt.desc())
+                .limit(limit)
+                .fetch();
+        return result.stream().map(MemberProfile::new).toList();
     }
+
+    @Override
+    public List<MemberProfile> getMembersAfterCursor(String cursor, int limit, MembersRequestCondition condition) {
+        if (condition == null || condition.getCategories() == null || condition.getCategories().isEmpty()) {
+            return getMembersAfterCursor(cursor, limit);
+        }
+        List<Category> categories = condition.getCategories();
+        // 작동은 하지만 categoryPath 부분이 이해가 안됩니다.
+        EnumPath<Category> categoryPath = Expressions.enumPath(Category.class, profileSkill, "skill"); // "category" 대신 "skill"로 수정
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        if (cursor != null) {
+            LocalDateTime cursorDateTime = LocalDateTime.parse(cursor);
+            whereClause.and(member.updatedAt.lt(cursorDateTime));
+        }
+        JPAQuery<Profile> subQuery = new JPAQuery<>(em)
+                .select(profile)
+                .from(profile)
+                .join(profile.skills, profileSkill)
+                .where(profileSkill.skill.in(categories))
+                .groupBy(profile.id)
+                .having(categoryPath.count().goe((long) categories.size()));
+
+        List<Member> result = query
+                .selectFrom(member)
+                .join(member.profile, profile)
+                .where(profile.in(subQuery.fetch()).and(whereClause))
+                .limit(limit)
+                .fetch();
+
+        return result.stream().map(MemberProfile::new).toList();
+    }
+
 
     @Override
     public Optional<Member> findByIdWithProfile(Long id) {
