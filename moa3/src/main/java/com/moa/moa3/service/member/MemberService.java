@@ -1,5 +1,6 @@
 package com.moa.moa3.service.member;
 
+import com.moa.moa3.dto.global.MembersRequestCondition;
 import com.moa.moa3.dto.member.MemberListResponse;
 import com.moa.moa3.dto.member.MemberProfile;
 import com.moa.moa3.dto.member.MemberProfileResponse;
@@ -56,14 +57,18 @@ public class MemberService {
 
     // 향후 로직이 복잡해지면 querydsl 과 @QueryProjection 을 사용해 dto 만 조회하는 방법으로 변경하겠습니다.
     public MemberProfileResponse getMemberProfile(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findByIdWithProfile(memberId).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
         );
         return new MemberProfileResponse(member);
     }
-
     public MemberListResponse getMemberList(String cursor, int limit) {
         List<MemberProfile> members = memberRepository.getMembersAfterCursor(cursor, limit);
+        String nextCursor = members.size() == 0 ? null : members.get(members.size() - 1).getUpdatedAt().toString();
+        return new MemberListResponse(members, nextCursor);
+    }
+    public MemberListResponse getMemberList(String cursor, int limit, MembersRequestCondition condition) {
+        List<MemberProfile> members = memberRepository.getMembersAfterCursor(cursor, limit, condition);
         String nextCursor = members.size() == 0 ? null : members.get(members.size() - 1).getUpdatedAt().toString();
         return new MemberListResponse(members, nextCursor);
     }
