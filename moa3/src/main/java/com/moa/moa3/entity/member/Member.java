@@ -1,5 +1,6 @@
 package com.moa.moa3.entity.member;
 
+import com.moa.moa3.dto.member.ProfileUpdateRequest;
 import com.moa.moa3.entity.BaseEntity;
 import com.moa.moa3.entity.member.profile.Profile;
 import jakarta.persistence.*;
@@ -58,5 +59,10 @@ public class Member extends BaseEntity {
         this.imageUrl = imageUrl;
         this.oAuthProvider = oAuthProvider;
         firstLogin = true;
+    }
+
+    public void update(ProfileUpdateRequest profileUpdateRequest) {
+        this.name = profileUpdateRequest.getName();
+        this.profile.update(profileUpdateRequest);
     }
 }

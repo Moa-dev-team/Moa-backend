@@ -6,5 +6,6 @@ import java.util.List;
 
 @Data
 public class ProfileUpdateRequest {
+    String name;
     private List<String> skills;
 }
