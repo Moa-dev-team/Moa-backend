@@ -1,6 +1,6 @@
 package com.moa.moa3.entity.member.profile;
 
-import com.moa.moa3.dto.member.ProfileModifyRequest;
+import com.moa.moa3.dto.member.ProfileUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -17,9 +17,9 @@ public class Profile {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileSkill> skills = new ArrayList<>();
 
-    public void update(ProfileModifyRequest profileModifyRequest) {
+    public void update(ProfileUpdateRequest profileUpdateRequest) {
         this.skills.clear();
-        for (String skill : profileModifyRequest.getSkills()) {
+        for (String skill : profileUpdateRequest.getSkills()) {
             this.skills.add(new ProfileSkill(Category.of(skill)));
         }
     }
