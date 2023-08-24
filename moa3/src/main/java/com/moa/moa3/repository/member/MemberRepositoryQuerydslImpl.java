@@ -94,6 +94,7 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
                 .selectFrom(member)
                 .join(member.profile, profile)
                 .where(profile.in(subQuery.fetch()).and(whereClause))
+                .orderBy(member.updatedAt.desc())
                 .limit(limit)
                 .fetch();
 
