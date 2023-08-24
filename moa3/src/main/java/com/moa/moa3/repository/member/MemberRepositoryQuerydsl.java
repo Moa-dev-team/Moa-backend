@@ -1,5 +1,6 @@
 package com.moa.moa3.repository.member;
 
+import com.moa.moa3.dto.global.MembersRequestCondition;
 import com.moa.moa3.dto.member.MemberProfile;
 import com.moa.moa3.entity.member.Member;
 
@@ -11,5 +12,6 @@ public interface MemberRepositoryQuerydsl {
     Member findByName(String name);
     Optional<Member> findByEmailWithAuthorities(String email);
     List<MemberProfile> getMembersAfterCursor(String cursor, int limit);
+    List<MemberProfile> getMembersAfterCursor(String cursor, int limit, MembersRequestCondition condition);
     Optional<Member> findByIdWithProfile(Long id);
 }
