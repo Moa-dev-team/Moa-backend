@@ -59,6 +59,13 @@ public class MemberService {
         );
         return new MemberProfileResponse(member);
     }
+
+    /**
+     * 테스트용으로 만든 메소드 입니다. 향후 삭제하겠습니다.
+     * @param cursor
+     * @param limit
+     * @return
+     */
     public MemberListResponse getMemberList(String cursor, int limit) {
         List<MemberProfile> members = memberRepository.getMembersAfterCursor(cursor, limit);
         String nextCursor = members.size() == 0 ? null : members.get(members.size() - 1).getUpdatedAt().toString();

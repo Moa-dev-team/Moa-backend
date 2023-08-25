@@ -22,4 +22,11 @@ public class GlobalMemberController {
                 .status(HttpStatus.OK)
                 .body(memberService.getMemberList(cursor, limit, condition));
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity getProfile(@RequestParam Long memberId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(memberService.getMemberProfile(memberId));
+    }
 }
