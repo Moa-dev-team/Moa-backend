@@ -18,6 +18,7 @@ public class MemberProfileResponse {
     private String imageUrl;
     private List<Category> skills;
     private String job;
+    private String introduction;
 
     public MemberProfileResponse(Member member) {
         name = member.getName();
@@ -25,5 +26,6 @@ public class MemberProfileResponse {
         imageUrl = member.getImageUrl();
         skills = member.getProfile().getSkills().stream().map(ProfileSkill::getSkill).toList();
         job = member.getProfile().getJob().getName();
+        introduction = member.getProfile().getIntroduction();
     }
 }
