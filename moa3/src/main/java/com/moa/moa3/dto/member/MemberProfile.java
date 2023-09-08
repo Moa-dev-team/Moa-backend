@@ -20,13 +20,15 @@ public class MemberProfile {
     private String imageUrl;
     private LocalDateTime updatedAt;
     private List<Category> skills;
+    private String job;
 
     public MemberProfile(Member member) {
-        this.memberId = member.getId();
-        this.name = member.getName();
-        this.email = member.getEmail();
-        this.imageUrl = member.getImageUrl();
-        this.updatedAt = member.getUpdatedAt();
-        this.skills = member.getProfile().getSkills().stream().map(ProfileSkill::getSkill).toList();
+        memberId = member.getId();
+        name = member.getName();
+        email = member.getEmail();
+        imageUrl = member.getImageUrl();
+        updatedAt = member.getUpdatedAt();
+        skills = member.getProfile().getSkills().stream().map(ProfileSkill::getSkill).toList();
+        job = member.getProfile().getJob().getName();
     }
 }

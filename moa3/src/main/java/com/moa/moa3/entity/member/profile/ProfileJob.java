@@ -19,4 +19,8 @@ public class ProfileJob {
     public ProfileJob(Category job) {
         this.job = job;
     }
+
+    public String getName() {
+        return job.getName();
+    }
 }
