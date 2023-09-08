@@ -1,14 +1,11 @@
 package com.moa.moa3.service.member;
 
 import com.moa.moa3.dto.member.MemberListResponse;
-import com.moa.moa3.dto.member.ProfileModifyRequest;
+import com.moa.moa3.dto.member.ProfileUpdateRequest;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.entity.member.profile.Category;
-import com.moa.moa3.entity.member.profile.ProfileSkill;
 import com.moa.moa3.repository.member.MemberRepository;
 import jakarta.persistence.EntityManager;
-import org.hibernate.Hibernate;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -74,11 +70,11 @@ class MemberServiceTest {
         em.clear();
         Member findMember = memberRepository.findByIdWithProfile(member.getId()).get();
 
-        ProfileModifyRequest profileModifyRequest = new ProfileModifyRequest();
+        ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest();
         List<String> skills = List.of("Java", "Spring");
-        profileModifyRequest.setSkills(skills);
+        profileUpdateRequest.setSkills(skills);
 
-        memberService.updateMemberProfile(findMember.getId(), profileModifyRequest);
+        memberService.updateMemberProfile(findMember.getId(), profileUpdateRequest);
 
         em.flush();
         em.clear();

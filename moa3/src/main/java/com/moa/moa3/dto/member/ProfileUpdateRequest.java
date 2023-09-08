@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProfileModifyRequest {
+public class ProfileUpdateRequest {
+    String name;
     private List<String> skills;
 }

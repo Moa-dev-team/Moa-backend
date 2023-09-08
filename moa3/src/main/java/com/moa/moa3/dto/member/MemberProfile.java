@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Data
 public class MemberProfile {
+    private Long memberId;
     private String name;
     private String email;
     private String imageUrl;
@@ -21,6 +22,7 @@ public class MemberProfile {
     private List<Category> skills;
 
     public MemberProfile(Member member) {
+        this.memberId = member.getId();
         this.name = member.getName();
         this.email = member.getEmail();
         this.imageUrl = member.getImageUrl();

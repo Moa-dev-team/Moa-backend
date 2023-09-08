@@ -1,11 +1,9 @@
 package com.moa.moa3.controller.user;
 
-import com.moa.moa3.dto.member.ProfileModifyRequest;
-import com.moa.moa3.repository.member.MemberRepository;
+import com.moa.moa3.dto.member.ProfileUpdateRequest;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,10 +31,10 @@ public class UserController {
     }
 
     @PostMapping("/profile/update")
-    public ResponseEntity modifyProfile(@RequestBody ProfileModifyRequest profileModifyRequest) {
+    public ResponseEntity modifyProfile(@RequestBody ProfileUpdateRequest profileUpdateRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
-        memberService.updateMemberProfile(memberDetails.getMemberId(), profileModifyRequest);
+        memberService.updateMemberProfile(memberDetails.getMemberId(), profileUpdateRequest);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("update success");
