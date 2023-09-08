@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 public enum Category {
-    PYTHON("Python"), JAVA("Java"), REACT("React"), JAVASCRIPT("JavaScript"), SPRING("Spring");
+    PYTHON("Python"), JAVA("Java"), REACT("React"), JAVASCRIPT("JavaScript"), SPRING("Spring"),
+    FRONTEND("Frontend"), BACKEND("Backend"), STUDENT("Student");
 
     private final String name;
     Category(String name) {
