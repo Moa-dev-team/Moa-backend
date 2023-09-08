@@ -24,9 +24,11 @@ public class Profile {
     private String introduction;
 
     public void update(ProfileUpdateRequest profileUpdateRequest) {
-        this.skills.clear();
+        skills.clear();
         for (String skill : profileUpdateRequest.getSkills()) {
             this.skills.add(new ProfileSkill(Category.of(skill)));
         }
+        job = new ProfileJob(Category.of(profileUpdateRequest.getJob()));
+        introduction = profileUpdateRequest.getIntroduction();
     }
 }

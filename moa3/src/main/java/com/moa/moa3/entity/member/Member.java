@@ -62,7 +62,7 @@ public class Member extends BaseEntity {
     }
 
     public void update(ProfileUpdateRequest profileUpdateRequest) {
-        this.name = profileUpdateRequest.getName();
-        this.profile.update(profileUpdateRequest);
+        name = profileUpdateRequest.getName();
+        profile.update(profileUpdateRequest);
     }
 }
