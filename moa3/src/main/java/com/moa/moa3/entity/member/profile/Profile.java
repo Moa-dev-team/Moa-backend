@@ -20,6 +20,9 @@ public class Profile {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ProfileJob job = new ProfileJob(Category.STUDENT);
 
+    @Column(columnDefinition = "TEXT")
+    private String introduction;
+
     public void update(ProfileUpdateRequest profileUpdateRequest) {
         this.skills.clear();
         for (String skill : profileUpdateRequest.getSkills()) {
