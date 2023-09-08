@@ -18,7 +18,7 @@ public class Profile {
     private List<ProfileSkill> skills = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private ProfileJob job;
+    private ProfileJob job = new ProfileJob(Category.STUDENT);
 
     public void update(ProfileUpdateRequest profileUpdateRequest) {
         this.skills.clear();
