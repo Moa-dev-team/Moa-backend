@@ -31,4 +31,9 @@ public class Profile {
         job = new ProfileJob(Category.of(profileUpdateRequest.getJob()));
         introduction = profileUpdateRequest.getIntroduction();
     }
+
+    // test 시에만 사용합니다.
+    public void setJob(ProfileJob job){
+        this.job = job;
+    }
 }
