@@ -16,6 +16,27 @@ public enum UserProfileExtractor {
                     .imageUrl(String.valueOf(attributes.get("avatar_url")))
                     .build();
         }
+    },
+    GOOGLE("google") {
+        @Override
+        public UserProfile of(Map<String, Object> attributes) {
+            return UserProfile.builder()
+                    .email(String.valueOf(attributes.get("email")))
+                    .name(String.valueOf(attributes.get("name")))
+                    .imageUrl(String.valueOf(attributes.get("picture")))
+                    .build();
+        }
+    },
+    NAVER("naver") {
+        @Override
+        public UserProfile of(Map<String, Object> attributes) {
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            return UserProfile.builder()
+                    .email(String.valueOf(response.get("email")))
+                    .name(String.valueOf(response.get("name")))
+                    .imageUrl(String.valueOf(response.get("profile_image")))
+                    .build();
+        }
     };
 
     public static UserProfile extract(String providerName, Map<String, Object> attributes) {
