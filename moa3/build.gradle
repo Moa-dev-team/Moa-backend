@@ -60,6 +60,8 @@ dependencies {
 	// mac 과 spring 의 호환성 문제로 인해 추가하였습니다.
 	implementation("io.netty:netty-resolver-dns-native-macos:4.1.79.Final:osx-aarch_64")
 
+	//WebSocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
