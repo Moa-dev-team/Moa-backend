@@ -1,6 +1,6 @@
 package com.moa.moa3.controller.user;
 
-import com.moa.moa3.dto.chat.ChatMessage;
+import com.moa.moa3.dto.chat.MessageDto;
 import com.moa.moa3.dto.chat.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +35,11 @@ public class WebSocketEventListener {
         if(username != null) {
             log.info("User Disconnected : " + username);
 
-            ChatMessage chatMessage = new ChatMessage();
-            chatMessage.setType(MessageType.LEAVE);
-            chatMessage.setSender(username);
+            MessageDto messageDto = new MessageDto();
+            messageDto.setType(MessageType.LEAVE);
+            messageDto.setSender(username);
 
-            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+            messagingTemplate.convertAndSend("/topic/public", messageDto);
         }
     }
 }

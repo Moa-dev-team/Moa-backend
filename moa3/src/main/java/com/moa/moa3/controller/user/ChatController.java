@@ -1,7 +1,7 @@
 package com.moa.moa3.controller.user;
 
 
-import com.moa.moa3.dto.chat.ChatMessage;
+import com.moa.moa3.dto.chat.MessageDto;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -13,16 +13,15 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        return chatMessage;
+    public MessageDto sendMessage(@Payload MessageDto messageDto) {
+        return messageDto;
     }
 
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor) {
-        // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+    public MessageDto addUser(@Payload MessageDto messageDto,
+                              SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().put("username", messageDto.getSender());
+        return messageDto;
     }
 }
