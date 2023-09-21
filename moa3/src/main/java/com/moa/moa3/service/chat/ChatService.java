@@ -9,8 +9,10 @@ import com.moa.moa3.repository.chat.MessageRepository;
 import com.moa.moa3.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
@@ -18,12 +20,14 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public Long createChatRoom() {
         ChatRoom chatRoom = new ChatRoom();
         chatRoomRepository.save(chatRoom);
         return chatRoom.getId();
     }
 
+    @Transactional
     public void joinChatRoom(Long chatRoomId, Long memberId) {
         ChatRoom chatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
@@ -36,5 +40,7 @@ public class ChatService {
         chatRoom.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
         member.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
     }
+
+
 
 }

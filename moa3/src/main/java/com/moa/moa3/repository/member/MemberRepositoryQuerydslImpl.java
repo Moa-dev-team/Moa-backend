@@ -118,7 +118,7 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
     public Optional<Member> findByIdWithChatRoomsMembersJoins(Long id) {
         return Optional.ofNullable(
                 query
-                        .select(member)
+                        .selectFrom(member)
                         .leftJoin(member.chatRoomsMembersJoins).fetchJoin()
                         .where(member.id.eq(id))
                         .fetchOne()
