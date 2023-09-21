@@ -23,6 +23,6 @@ public enum Category {
                 return category;
             }
         }
-        throw new IllegalArgumentException("No such category exists");
+        throw new IllegalArgumentException("존재하지 않는 카테고리입니다. : " + name);
     }
 }

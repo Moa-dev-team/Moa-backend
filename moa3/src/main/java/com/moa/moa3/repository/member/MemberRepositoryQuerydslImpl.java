@@ -45,7 +45,7 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
                         .join(member.authorities)
                         .fetchJoin()
                         .where(member.email.eq(email))
-                        .fetchFirst()
+                        .fetchOne()
         );
     }
 
@@ -111,6 +111,17 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
                         .fetchJoin()
                         .where(member.id.eq(id))
                         .fetchFirst()
+        );
+    }
+
+    @Override
+    public Optional<Member> findByIdWithChatRoomsMembersJoins(Long id) {
+        return Optional.ofNullable(
+                query
+                        .select(member)
+                        .leftJoin(member.chatRoomsMembersJoins).fetchJoin()
+                        .where(member.id.eq(id))
+                        .fetchOne()
         );
     }
 }

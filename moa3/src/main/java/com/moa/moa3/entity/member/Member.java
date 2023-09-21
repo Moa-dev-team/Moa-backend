@@ -2,7 +2,7 @@ package com.moa.moa3.entity.member;
 
 import com.moa.moa3.dto.member.ProfileUpdateRequest;
 import com.moa.moa3.entity.BaseEntity;
-import com.moa.moa3.entity.chat.ChatRoomsMembers;
+import com.moa.moa3.entity.chat.ChatRoomsMembersJoin;
 import com.moa.moa3.entity.member.profile.Profile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -55,8 +55,8 @@ public class Member extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToMany(mappedBy = "chat_rooms_members_id")
-    private List<ChatRoomsMembers> ChatRoomsMembers = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<ChatRoomsMembersJoin> chatRoomsMembersJoins = new ArrayList<>();
 
     @Builder
     public Member(String name, String email, String imageUrl, String oAuthProvider) {
