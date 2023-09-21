@@ -1,7 +1,9 @@
 package com.moa.moa3.service.chat;
 
+import com.moa.moa3.dto.chat.MessageDto;
 import com.moa.moa3.entity.chat.ChatRoom;
 import com.moa.moa3.entity.chat.ChatRoomsMembersJoin;
+import com.moa.moa3.entity.chat.Message;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.repository.chat.ChatRoomRepository;
 import com.moa.moa3.repository.chat.ChatRoomsMembersJoinRepository;
@@ -41,6 +43,14 @@ public class ChatService {
         member.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
     }
 
+    @Transactional
+    public void sendMessage(Long chatRoomId, MessageDto messageDto) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(
+                () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
+        );
+        Message message = new Message(messageDto);
+        messageRepository.save(message);
 
-
+        chatRoom.getMessages().add(message);
+    }
 }

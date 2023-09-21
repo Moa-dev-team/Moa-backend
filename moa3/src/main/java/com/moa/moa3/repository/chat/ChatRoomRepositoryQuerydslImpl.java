@@ -24,4 +24,15 @@ public class ChatRoomRepositoryQuerydslImpl implements ChatRoomRepositoryQueryds
                         .fetchOne()
         );
     }
+
+    @Override
+    public Optional<ChatRoom> findByIdWithMessages(Long id) {
+        return Optional.ofNullable(
+                query
+                        .selectFrom(chatRoom)
+                        .leftJoin(chatRoom.messages).fetchJoin()
+                        .where(chatRoom.id.eq(id))
+                        .fetchOne()
+        );
+    }
 }
