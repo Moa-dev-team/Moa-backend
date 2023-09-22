@@ -3,11 +3,11 @@ package com.moa.moa3.service.chat;
 import com.moa.moa3.dto.chat.MessageDto;
 import com.moa.moa3.dto.chat.MessageType;
 import com.moa.moa3.entity.chat.ChatRoom;
+import com.moa.moa3.entity.chat.ChatRoomsMembersJoin;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.repository.chat.ChatRoomRepository;
 import com.moa.moa3.repository.member.MemberRepository;
-import io.swagger.v3.oas.annotations.callbacks.Callback;
-import org.assertj.core.api.Assertions;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,11 +15,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
 @Rollback(value = false)
+@Transactional
 class ChatServiceTest {
     @Autowired
     ChatService chatService;
@@ -27,6 +26,10 @@ class ChatServiceTest {
     MemberRepository memberRepository;
     @Autowired
     ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    EntityManager em;
+
     @Test
     void joinChatRoomTest() {
         Member member = new Member("test", "test@com", "test url", "local");
@@ -50,5 +53,31 @@ class ChatServiceTest {
 
         ChatRoom findChatRoom = chatRoomRepository.findByIdWithMessages(chatRoomId).get();
         assertThat(findChatRoom.getMessages().size()).isEqualTo(1);
+    }
+
+    @Test
+    void leaveChatTest() {
+        Member member = new Member("test", "test@com", "test url", "local");
+        memberRepository.save(member);
+
+        Long chatRoomId = chatService.createChatRoom();
+        chatService.joinChatRoom(chatRoomId, member.getId());
+
+        em.flush();
+        em.clear();
+
+        Member findMember = memberRepository.findByIdWithChatRoomsMembersJoins(member.getId()).get();
+        findMember.getChatRoomsMembersJoins().removeIf(
+                chatRoomsMembersJoin -> chatRoomsMembersJoin.getChatRoom().getId().equals(chatRoomId)
+        );
+        ChatRoom findChatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).get();
+        findChatRoom.getChatRoomsMembersJoins().removeIf(
+                chatRoomsMembersJoin -> chatRoomsMembersJoin.getMember().getId().equals(member.getId())
+        );
+
+        em.flush();
+        em.clear();
+        assertThat(findMember.getChatRoomsMembersJoins().size()).isEqualTo(0);
+        assertThat(findChatRoom.getChatRoomsMembersJoins().size()).isEqualTo(0);
     }
 }

@@ -3,7 +3,9 @@ package com.moa.moa3.entity.chat;
 import com.moa.moa3.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 /**
  * ChatRoom 과 Member 의 다대다 양방향 매핑을 위한 조인 테이블입니다.<br>
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
  */
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoomsMembersJoin {
     @Id @GeneratedValue

@@ -40,7 +40,26 @@ public class ChatService {
         ChatRoomsMembersJoin chatRoomsMembersJoin = new ChatRoomsMembersJoin(chatRoom, member);
         chatRoomsMembersJoinRepository.save(chatRoomsMembersJoin);
         chatRoom.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
+        chatRoom.plusMemberCount();
         member.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
+    }
+
+    @Transactional
+    public void leaveChatRoom(Long chatRoomId, Long memberId) {
+        ChatRoom chatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).orElseThrow(
+                () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
+        );
+        Member member = memberRepository.findByIdWithChatRoomsMembersJoins(memberId).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+        );
+        chatRoom.getChatRoomsMembersJoins().
+                removeIf(chatRoomsMembersJoin -> chatRoomsMembersJoin.getMember().getId().equals(memberId));
+        chatRoom.minusMemberCount();
+        if (chatRoom.getMemberCount() == 0) {
+            chatRoomRepository.delete(chatRoom);
+        }
+        member.getChatRoomsMembersJoins().
+                removeIf(chatRoomsMembersJoin -> chatRoomsMembersJoin.getChatRoom().getId().equals(chatRoomId));
     }
 
     @Transactional

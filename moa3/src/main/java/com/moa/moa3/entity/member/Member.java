@@ -55,7 +55,7 @@ public class Member extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoomsMembersJoin> chatRoomsMembersJoins = new ArrayList<>();
 
     @Builder
