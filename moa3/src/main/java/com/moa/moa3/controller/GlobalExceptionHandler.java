@@ -6,6 +6,7 @@ import com.moa.moa3.exception.oauth.NotFoundProviderException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,9 +17,11 @@ public class GlobalExceptionHandler {
     // 400
     @ExceptionHandler({
             IllegalArgumentException.class,
+            IllegalStateException.class,
             NotFoundProviderException.class,
             DuplicateLoginFailureException.class,
-            ResponseStatusException.class
+            ResponseStatusException.class,
+            MissingServletRequestParameterException.class
     })
     @ResponseBody
     public ResponseEntity<Object> handleBadRequestException(Exception ex) {

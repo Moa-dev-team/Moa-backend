@@ -6,6 +6,5 @@ import java.util.List;
 
 @Data
 public class CreateChatRequest {
-    private Long roomId;
     private List<Long> memberIds;
 }

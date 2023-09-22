@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -29,19 +31,23 @@ public class ChatService {
         return chatRoom.getId();
     }
 
+
+    // 채팅방에 소속되지 않은 멤버의 경우 예외가 발생될 수 있게 수정해야합니다.
     @Transactional
-    public void joinChatRoom(Long chatRoomId, Long memberId) {
-        ChatRoom chatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).orElseThrow(
+    public void addChatMembers(Long chatRoomId, List<Long> memberIds) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
         );
-        Member member = memberRepository.findByIdWithChatRoomsMembersJoins(memberId).orElseThrow(
-                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
-        );
-        ChatRoomsMembersJoin chatRoomsMembersJoin = new ChatRoomsMembersJoin(chatRoom, member);
-        chatRoomsMembersJoinRepository.save(chatRoomsMembersJoin);
-        chatRoom.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
-        chatRoom.plusMemberCount();
-        member.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
+        for (Long memberId : memberIds) {
+            Member member = memberRepository.findById(memberId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+            );
+            ChatRoomsMembersJoin chatRoomsMembersJoin = new ChatRoomsMembersJoin(chatRoom, member);
+            chatRoomsMembersJoinRepository.save(chatRoomsMembersJoin);
+            chatRoom.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
+            chatRoom.plusMemberCount();
+            member.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
+        }
     }
 
     @Transactional
@@ -54,10 +60,6 @@ public class ChatService {
         );
         chatRoom.getChatRoomsMembersJoins().
                 removeIf(chatRoomsMembersJoin -> chatRoomsMembersJoin.getMember().getId().equals(memberId));
-        chatRoom.minusMemberCount();
-        if (chatRoom.getMemberCount() == 0) {
-            chatRoomRepository.delete(chatRoom);
-        }
         member.getChatRoomsMembersJoins().
                 removeIf(chatRoomsMembersJoin -> chatRoomsMembersJoin.getChatRoom().getId().equals(chatRoomId));
     }
