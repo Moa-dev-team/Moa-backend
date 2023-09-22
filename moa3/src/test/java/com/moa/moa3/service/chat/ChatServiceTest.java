@@ -21,7 +21,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-@Rollback(value = false)
 @Transactional
 class ChatServiceTest {
     @Autowired

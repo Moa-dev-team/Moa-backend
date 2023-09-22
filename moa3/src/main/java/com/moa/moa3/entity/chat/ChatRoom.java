@@ -17,7 +17,7 @@ public class ChatRoom extends BaseEntity {
     @Column(name = "chat_room_id")
     private Long id;
     private String name;
-    private Integer memberCount = 0;
+
 
     // chatRoomsMemberJoin 을 더하는 로직은 ChatRoomService 에 있습니다.
     // Member 객체도 같이 넣어주어야 하기 때문입니다.
@@ -27,15 +27,4 @@ public class ChatRoom extends BaseEntity {
     // 채팅방이 사라지면 안에 있던 메시지들도 같이 삭제됩니다.
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
-
-    public void plusMemberCount() {
-        memberCount++;
-    }
-    public void minusMemberCount() {
-        memberCount--;
-        if (memberCount < 0) {
-            memberCount = 0;
-            throw new IllegalStateException("채팅방 인원이 0보다 작을 수 없습니다.");
-        }
-    }
 }

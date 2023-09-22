@@ -45,7 +45,6 @@ public class ChatService {
             ChatRoomsMembersJoin chatRoomsMembersJoin = new ChatRoomsMembersJoin(chatRoom, member);
             chatRoomsMembersJoinRepository.save(chatRoomsMembersJoin);
             chatRoom.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
-            chatRoom.plusMemberCount();
             member.getChatRoomsMembersJoins().add(chatRoomsMembersJoin);
         }
     }
@@ -62,6 +61,20 @@ public class ChatService {
                 removeIf(chatRoomsMembersJoin -> chatRoomsMembersJoin.getMember().getId().equals(memberId));
         member.getChatRoomsMembersJoins().
                 removeIf(chatRoomsMembersJoin -> chatRoomsMembersJoin.getChatRoom().getId().equals(chatRoomId));
+    }
+
+    /**
+     * 채팅방을 삭제하면 맴버에서 연결된 채팅방도 삭제됩니다.<br>
+     * 하지만 맴버가 영속성 컨텍스트에 존재할 경우 맴버에서 연결된 채팅방은 삭제되지 않은 것처럼 보일 수 있습니다.<br>
+     * 채팅방을 삭제하면 채팅방에 있는 모든 메세지가 삭제됩니다. <br>
+     * @param chatRoomId
+     */
+    @Transactional
+    public void deleteChatRoom(Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(
+                () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
+        );
+        chatRoomRepository.delete(chatRoom);
     }
 
     @Transactional
