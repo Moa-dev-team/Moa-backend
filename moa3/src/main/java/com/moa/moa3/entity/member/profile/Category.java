@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 public enum Category {
-    PYTHON("Python"), JAVA("Java"), REACT("React"), JAVASCRIPT("JavaScript"), SPRING("Spring");
+    PYTHON("Python"), JAVA("Java"), REACT("React"), JAVASCRIPT("JavaScript"), SPRING("Spring"),
+    FRONTEND("Frontend"), BACKEND("Backend"), STUDENT("Student");
 
     private final String name;
     Category(String name) {
@@ -22,6 +23,6 @@ public enum Category {
                 return category;
             }
         }
-        throw new IllegalArgumentException("No such category exists");
+        throw new IllegalArgumentException("존재하지 않는 카테고리입니다. : " + name);
     }
 }

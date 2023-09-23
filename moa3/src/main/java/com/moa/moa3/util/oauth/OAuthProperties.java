@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Getter @Setter
 public class OAuthProperties {
     public Github github;
+    public Naver naver;
+    public Google google;
+
     @Getter @Setter
     public static class Github {
         private String clientId;
@@ -19,7 +22,24 @@ public class OAuthProperties {
         private String redirectUri;
         private String tokenUri;
         private String userInfoUri;
+    }
 
+    @Getter @Setter
+    public static class Naver {
+        private String clientId;
+        private String clientSecret;
+        private String redirectUri;
+        private String tokenUri;
+        private String userInfoUri;
+    }
+
+    @Getter @Setter
+    public static class Google {
+        private String clientId;
+        private String clientSecret;
+        private String redirectUri;
+        private String tokenUri;
+        private String userInfoUri;
     }
 }
 

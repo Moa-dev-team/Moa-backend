@@ -14,4 +14,5 @@ public interface MemberRepositoryQuerydsl {
     List<MemberProfile> getMembersAfterCursor(String cursor, int limit);
     List<MemberProfile> getMembersAfterCursor(String cursor, int limit, MembersRequestCondition condition);
     Optional<Member> findByIdWithProfile(Long id);
+    Optional<Member> findByIdWithChatRoomsMembersJoins(Long id);
 }

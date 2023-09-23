@@ -32,5 +32,23 @@ public class OAuthProviderFactory {
                 .tokenUri(github.getTokenUri())
                 .userInfoUri(github.getUserInfoUri())
                 .build());
+
+        OAuthProperties.Google google = properties.getGoogle();
+        providers.put("google", OAuthProvider.builder()
+                .clientId(google.getClientId())
+                .clientSecret(google.getClientSecret())
+                .redirectUri(google.getRedirectUri())
+                .tokenUri(google.getTokenUri())
+                .userInfoUri(google.getUserInfoUri())
+                .build());
+
+        OAuthProperties.Naver naver = properties.getNaver();
+        providers.put("naver", OAuthProvider.builder()
+                .clientId(naver.getClientId())
+                .clientSecret(naver.getClientSecret())
+                .redirectUri(naver.getRedirectUri())
+                .tokenUri(naver.getTokenUri())
+                .userInfoUri(naver.getUserInfoUri())
+                .build());
     }
 }

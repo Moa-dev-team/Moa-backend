@@ -27,6 +27,7 @@ class MemberTest {
         ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest();
         profileUpdateRequest.setName("test name");
         profileUpdateRequest.setSkills(List.of("Python", "Spring"));
+        profileUpdateRequest.setJob("Frontend");
         member.update(profileUpdateRequest);
         memberRepository.save(member);
 

@@ -73,6 +73,7 @@ class MemberServiceTest {
         ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest();
         List<String> skills = List.of("Java", "Spring");
         profileUpdateRequest.setSkills(skills);
+        profileUpdateRequest.setJob("Backend");
 
         memberService.updateMemberProfile(findMember.getId(), profileUpdateRequest);
 

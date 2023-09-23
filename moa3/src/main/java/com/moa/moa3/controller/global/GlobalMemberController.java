@@ -24,10 +24,7 @@ public class GlobalMemberController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity getProfile(@RequestParam(required = false) Long memberId) {
-        if (memberId == null) {
-            throw new IllegalArgumentException("memberId is null");
-        }
+    public ResponseEntity getProfile(@RequestParam Long memberId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(memberService.getMemberProfile(memberId));
