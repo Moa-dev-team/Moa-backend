@@ -4,6 +4,7 @@ import com.moa.moa3.dto.oauth.OAuthAccessTokenResponse;
 import com.moa.moa3.util.oauth.OAuthProvider;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Slf4j
 public class OAuthApi {
     public static OAuthAccessTokenResponse getAccessTokenResponse(String code, OAuthProvider oAuthProvider) {
         try {
@@ -34,6 +36,7 @@ public class OAuthApi {
                     .bodyToMono(OAuthAccessTokenResponse.class)
                     .block();
         } catch (WebClientResponseException e) {
+            log.error("access token 을 받아오는 과정에서 오류 발생", e);
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
         }
     }
@@ -57,6 +60,7 @@ public class OAuthApi {
                     .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                     .block();
         } catch (WebClientResponseException e) {
+            log.error("access token으로 유저 정보를 받아오는 과정에서 오류 발생", e);
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
         }
     }

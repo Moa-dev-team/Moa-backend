@@ -19,5 +19,14 @@ public class OAuthPropertiesTest {
         System.out.println(oAuthProperties.getGithub().getUserInfoUri());
     }
 
+    @Test
+    public void googleOAuthPropertiesTest() {
+        System.out.println(oAuthProperties.getGoogle().getClientId());
+        System.out.println(oAuthProperties.getGoogle().getClientSecret());
+        System.out.println(oAuthProperties.getGoogle().getRedirectUri());
+        System.out.println(oAuthProperties.getGoogle().getTokenUri());
+        System.out.println(oAuthProperties.getGoogle().getUserInfoUri());
+    }
+
 
 }

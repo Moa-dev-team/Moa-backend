@@ -32,7 +32,7 @@ public class ChatService {
     }
 
 
-    // 채팅방에 소속되지 않은 멤버의 경우 예외가 발생될 수 있게 수정해야합니다.
+    // 채팅방에 이미 소속된 맴버를 추가하는 경우 예외처리 필요
     @Transactional
     public void addChatMembers(Long chatRoomId, List<Long> memberIds) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(
