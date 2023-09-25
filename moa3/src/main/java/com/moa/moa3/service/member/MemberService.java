@@ -26,7 +26,7 @@ public class MemberService {
 
     @Transactional
     public Member getOrCreateMember(UserProfile userProfile, String provider) {
-        Optional<Member> memberOptional = memberRepository.findByEmailWithAuthorities(userProfile.getEmail());
+        Optional<Member> memberOptional = memberRepository.findByEmail(userProfile.getEmail());
         Member member;
         // 이미 가입된 계정이 존재할 경우
         if (memberOptional.isPresent()) {
