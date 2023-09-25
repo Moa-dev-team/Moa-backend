@@ -18,7 +18,7 @@ spring :
         default_batch_fetch_size: 100
     hibernate:
       ddl-auto: create
-    show-sql: true
+#    show-sql: true
 
   # redis
   data :
