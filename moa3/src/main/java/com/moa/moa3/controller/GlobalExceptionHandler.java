@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.pattern.PatternParseException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -19,9 +20,8 @@ public class GlobalExceptionHandler {
             IllegalArgumentException.class,
             IllegalStateException.class,
             NotFoundProviderException.class,
-            DuplicateLoginFailureException.class,
             ResponseStatusException.class,
-            MissingServletRequestParameterException.class
+            MissingServletRequestParameterException.class,
     })
     @ResponseBody
     public ResponseEntity<Object> handleBadRequestException(Exception ex) {
@@ -38,6 +38,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+//     409 -> 이미 가입된 계정이 있을 경우.
+    @ExceptionHandler({
+            DuplicateLoginFailureException.class,
+    })
+    @ResponseBody
+    public ResponseEntity<Object> handleCustomException(Exception ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
     // 500
     @ExceptionHandler(Exception.class)
     @ResponseBody
