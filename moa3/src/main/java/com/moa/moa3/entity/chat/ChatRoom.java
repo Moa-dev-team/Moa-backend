@@ -16,7 +16,7 @@ public class ChatRoom extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "chat_room_id")
     private Long id;
-    private String name;
+    private String title;
 
 
     // chatRoomsMemberJoin 을 더하는 로직은 ChatRoomService 에 있습니다.
