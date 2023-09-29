@@ -10,10 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * MemberFactory 에서 Member를 생성할 것을 권장합니다.
@@ -54,6 +53,12 @@ public class Member extends BaseEntity {
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "member_last_access", joinColumns = @JoinColumn(name = "member_id"))
+    @MapKeyColumn(name = "chat_room_id")
+    @Column(name = "last_access_time")
+    private Map<Long, LocalDateTime> lastAccessTimes = new HashMap<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoomsMembersJoin> chatRoomsMembersJoins = new ArrayList<>();
