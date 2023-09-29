@@ -2,6 +2,7 @@ package com.moa.moa3.controller.user;
 
 import com.moa.moa3.dto.chat.CreateChatRequest;
 import com.moa.moa3.dto.chat.CreateChatResponse;
+import com.moa.moa3.dto.chat.InviteRequest;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,13 @@ public class ChatController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(chatService);
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity inviteMember(@RequestBody InviteRequest inviteRequest) {
+        chatService.addChatMembers(inviteRequest.getRoomId(), inviteRequest.getMemberIds());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("invite success");
     }
 }
