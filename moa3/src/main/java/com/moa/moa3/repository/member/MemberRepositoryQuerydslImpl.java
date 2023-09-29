@@ -2,6 +2,9 @@ package com.moa.moa3.repository.member;
 
 import com.moa.moa3.dto.global.MembersRequestCondition;
 import com.moa.moa3.dto.member.MemberProfile;
+import com.moa.moa3.entity.chat.QChatRoom;
+import com.moa.moa3.entity.chat.QChatRoomsMembersJoin;
+import com.moa.moa3.entity.chat.QMessage;
 import com.moa.moa3.entity.member.Member;
 import com.moa.moa3.entity.member.profile.Category;
 import com.moa.moa3.entity.member.profile.Profile;
@@ -18,6 +21,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moa.moa3.entity.chat.QChatRoom.*;
+import static com.moa.moa3.entity.chat.QChatRoomsMembersJoin.*;
+import static com.moa.moa3.entity.chat.QMessage.*;
 import static com.moa.moa3.entity.member.QMember.*;
 import static com.moa.moa3.entity.member.profile.QProfile.profile;
 import static com.moa.moa3.entity.member.profile.QProfileSkill.profileSkill;
@@ -120,6 +126,19 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
                 query
                         .selectFrom(member)
                         .leftJoin(member.chatRoomsMembersJoins).fetchJoin()
+                        .where(member.id.eq(id))
+                        .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<Member> findByIdWithChatRoomsAndLastAccess(Long id) {
+        return Optional.ofNullable(
+                query
+                        .selectFrom(member)
+                        .leftJoin(member.chatRoomsMembersJoins, chatRoomsMembersJoin).fetchJoin()
+                        .leftJoin(chatRoomsMembersJoin.chatRoom, chatRoom).fetchJoin()
+                        .leftJoin(member.lastAccessTimes).fetchJoin()
                         .where(member.id.eq(id))
                         .fetchOne()
         );
