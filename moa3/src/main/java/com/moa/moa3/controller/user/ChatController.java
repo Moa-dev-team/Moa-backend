@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 public class ChatController {
     private final ChatService chatService;
 
+    private static final LocalDateTime MAX_DATE = LocalDateTime.of(2200, 1, 1, 0, 0);
+
 
     @PostMapping("/create")
     public ResponseEntity createChatRoom(@RequestBody CreateChatRequest createChatRequest) {
@@ -48,7 +50,7 @@ public class ChatController {
             @RequestParam(required = false, defaultValue = "20")Integer limit
             ) {
         if (cursor == null) {
-            cursor = LocalDateTime.MAX;
+            cursor = MAX_DATE;
         }
         return ResponseEntity
                 .status(HttpStatus.OK)

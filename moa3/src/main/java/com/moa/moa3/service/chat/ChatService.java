@@ -27,6 +27,7 @@ public class ChatService {
     private final ChatRoomsMembersJoinRepository chatRoomsMembersJoinRepository;
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
+    private static final LocalDateTime MIN_DATE = LocalDateTime.of(2000, 1, 1, 0, 0);
 
     @Transactional
     public Long createChatRoom() {
@@ -102,7 +103,7 @@ public class ChatService {
         for (ChatRoom chatRoom : chatRooms) {
             LocalDateTime lastAccess = member.getLastAccessTimes().get(chatRoom.getId());
             if (lastAccess == null) {
-                lastAccess = LocalDateTime.MIN;
+                lastAccess = MIN_DATE;
             }
             int unreadCount = messageRepository.countUnreadMessage(chatRoom.getId(), lastAccess);
             Message lastMessage = messageRepository.findLastMessage(chatRoom.getId()).orElse(null);
