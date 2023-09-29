@@ -16,4 +16,5 @@ public interface MemberRepositoryQuerydsl {
     Optional<Member> findByIdWithProfile(Long id);
     Optional<Member> findByIdWithChatRoomsMembersJoins(Long id);
     Optional<Member> findByIdWithChatRoomsAndLastAccess(Long id);
+    Optional<Member> findByIdWithLastAccess(Long id);
 }

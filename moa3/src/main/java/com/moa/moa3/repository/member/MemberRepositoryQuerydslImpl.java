@@ -143,4 +143,15 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl{
                         .fetchOne()
         );
     }
+
+    @Override
+    public Optional<Member> findByIdWithLastAccess(Long id) {
+        return Optional.ofNullable(
+                query
+                        .selectFrom(member)
+                        .leftJoin(member.lastAccessTimes).fetchJoin()
+                        .where(member.id.eq(id))
+                        .fetchOne()
+        );
+    }
 }
