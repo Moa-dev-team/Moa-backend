@@ -20,8 +20,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 @Slf4j
 public class WebSocketEventListener {
-
-    private final SimpMessageSendingOperations messagingTemplate;
     private final ChatService chatService;
 
     @EventListener
@@ -36,14 +34,10 @@ public class WebSocketEventListener {
         Long memberId = (Long) headerAccessor.getSessionAttributes().get("memberId");
         Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
 
-        String destination = "/topic/" + roomId;
-
         if(memberId != null) {
             MessageDto messageDto = new MessageDto();
-            messageDto.setType(MessageType.LEAVE);
             messageDto.setSenderId(memberId);
             chatService.setLastAccessTime(roomId, memberId);
-            messagingTemplate.convertAndSend(destination, messageDto);
         }
     }
 }
