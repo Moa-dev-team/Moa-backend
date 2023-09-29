@@ -47,9 +47,12 @@ public class ChatController {
             @RequestParam(required = false)LocalDateTime cursor,
             @RequestParam(required = false, defaultValue = "20")Integer limit
             ) {
+        if (cursor == null) {
+            cursor = LocalDateTime.MAX;
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(chatService);
+                .body(chatService.getMessages(roomId, cursor, limit));
     }
 
     @PostMapping("/invite")
