@@ -2,6 +2,7 @@ package com.moa.moa3.controller.user;
 
 import com.moa.moa3.dto.chat.MessageDto;
 import com.moa.moa3.dto.chat.MessageType;
+import com.moa.moa3.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -21,6 +22,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class WebSocketEventListener {
 
     private final SimpMessageSendingOperations messagingTemplate;
+    private final ChatService chatService;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -31,15 +33,18 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        if(username != null) {
-            log.info("User Disconnected : " + username);
+        String username = (String) headerAccessor.getSessionAttributes().get("name");
+        Long memberId = (Long) headerAccessor.getSessionAttributes().get("memberId");
+        Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
 
+        String destination = "/topic/" + roomId;
+
+        if(username != null) {
             MessageDto messageDto = new MessageDto();
             messageDto.setType(MessageType.LEAVE);
             messageDto.setSender(username);
-
-            messagingTemplate.convertAndSend("/topic/public", messageDto);
+            chatService.setLastAccessTime(roomId, memberId);
+            messagingTemplate.convertAndSend(destination, messageDto);
         }
     }
 }

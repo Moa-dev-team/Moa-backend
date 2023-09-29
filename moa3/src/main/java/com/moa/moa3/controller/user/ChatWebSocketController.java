@@ -22,17 +22,21 @@ public class ChatWebSocketController {
         Long roomId = messageDto.getRoomId();
         String destination = "/topic/" + roomId;
         chatService.sendMessage(roomId, messageDto);
-
         messagingTemplate.convertAndSend(destination, messageDto);
         return messageDto;
     }
 
     @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
     public MessageDto addUser(@Payload MessageDto messageDto,
                               SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", messageDto.getSender());
+        Long roomId = messageDto.getRoomId();
+        String destination = "/topic/" + roomId;
+
+        headerAccessor.getSessionAttributes().put("memberId", messageDto.getSenderId());
         headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());
+        headerAccessor.getSessionAttributes().put("name", messageDto.getSender());
+
+        messagingTemplate.convertAndSend(destination, messageDto);
         return messageDto;
     }
 }
