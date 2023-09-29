@@ -67,7 +67,8 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/auth/**", "/global/**", "/ws/**").permitAll()
+                // chat 관련 api 는 향후 "ROLE_USER" 의 권한으로 제한할 예정입니다.
+                authorize.requestMatchers("/auth/**", "/global/**", "/ws/**", "/chat/**").permitAll()
                         .requestMatchers("/user", "/user/**").hasAuthority("ROLE_USER")
                         .requestMatchers(PUBLIC_MATCHERS).permitAll()
                         .requestMatchers(SWAGGER_MATCHERS).permitAll()
