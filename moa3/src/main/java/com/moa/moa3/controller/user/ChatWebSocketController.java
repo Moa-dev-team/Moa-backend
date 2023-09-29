@@ -34,7 +34,6 @@ public class ChatWebSocketController {
 
         headerAccessor.getSessionAttributes().put("memberId", messageDto.getSenderId());
         headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());
-        headerAccessor.getSessionAttributes().put("name", messageDto.getSender());
 
         messagingTemplate.convertAndSend(destination, messageDto);
         return messageDto;

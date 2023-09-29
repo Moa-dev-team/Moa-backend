@@ -33,16 +33,15 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        String username = (String) headerAccessor.getSessionAttributes().get("name");
         Long memberId = (Long) headerAccessor.getSessionAttributes().get("memberId");
         Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
 
         String destination = "/topic/" + roomId;
 
-        if(username != null) {
+        if(memberId != null) {
             MessageDto messageDto = new MessageDto();
             messageDto.setType(MessageType.LEAVE);
-            messageDto.setSender(username);
+            messageDto.setSenderId(memberId);
             chatService.setLastAccessTime(roomId, memberId);
             messagingTemplate.convertAndSend(destination, messageDto);
         }

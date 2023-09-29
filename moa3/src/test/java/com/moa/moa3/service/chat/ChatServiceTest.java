@@ -53,7 +53,7 @@ class ChatServiceTest {
     @Test
     void sendMessageTest() {
         Long chatRoomId = chatService.createChatRoom();
-        MessageDto messageDto = new MessageDto(MessageType.JOIN, "나 등장", "호성", 1L, chatRoomId);
+        MessageDto messageDto = new MessageDto(MessageType.JOIN, "나 등장", 1L, chatRoomId);
         chatService.sendMessage(chatRoomId, messageDto);
 
         ChatRoom findChatRoom = chatRoomRepository.findByIdWithMessages(chatRoomId).get();
