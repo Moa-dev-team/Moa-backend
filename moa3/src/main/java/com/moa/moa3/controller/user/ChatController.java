@@ -3,6 +3,7 @@ package com.moa.moa3.controller.user;
 import com.moa.moa3.dto.chat.CreateChatRequest;
 import com.moa.moa3.dto.chat.CreateChatResponse;
 import com.moa.moa3.dto.chat.InviteRequest;
+import com.moa.moa3.dto.chat.MessageDto;
 import com.moa.moa3.security.MemberDetails;
 import com.moa.moa3.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 // 현재 인증, 인가 절차를 진행하고 있지 않지만 향후 포함될 수 있습니다.
 @RestController
@@ -20,7 +22,6 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
-
     private static final LocalDateTime MAX_DATE = LocalDateTime.of(2200, 1, 1, 0, 0);
 
 
@@ -44,7 +45,7 @@ public class ChatController {
     }
 
     @GetMapping("/messages")
-    public ResponseEntity getChatMessages(
+    public ResponseEntity<List<MessageDto>> getChatMessages(
             @RequestParam Long roomId,
             @RequestParam(required = false)LocalDateTime cursor,
             @RequestParam(required = false, defaultValue = "20")Integer limit

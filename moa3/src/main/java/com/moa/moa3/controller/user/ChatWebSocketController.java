@@ -29,13 +29,8 @@ public class ChatWebSocketController {
     @MessageMapping("/chat.addUser")
     public MessageDto addUser(@Payload MessageDto messageDto,
                               SimpMessageHeaderAccessor headerAccessor) {
-        Long roomId = messageDto.getRoomId();
-        String destination = "/topic/" + roomId;
-
         headerAccessor.getSessionAttributes().put("memberId", messageDto.getSenderId());
-        headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());
-
-        messagingTemplate.convertAndSend(destination, messageDto);
+        headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());    
         return messageDto;
     }
 }
