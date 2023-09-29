@@ -111,4 +111,12 @@ public class ChatService {
         return chatRoomResponse;
     }
 
+    @Transactional
+    public void setLastAccessTime(Long memberId, Long roomId) {
+        Member member = memberRepository.findByIdWithLastAccess(memberId).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+        );
+        member.getLastAccessTimes().put(roomId, LocalDateTime.now());
+    }
+
 }
