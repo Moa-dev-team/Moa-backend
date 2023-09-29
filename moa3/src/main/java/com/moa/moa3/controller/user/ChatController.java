@@ -59,4 +59,16 @@ public class ChatController {
                 .status(HttpStatus.OK)
                 .body("invite success");
     }
+
+    @GetMapping("/leave")
+    public ResponseEntity leaveChatRoom(
+            @RequestParam Long roomId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MemberDetails principal = (MemberDetails) authentication.getPrincipal();
+        Long memberId = principal.getMemberId();
+        chatService.leaveChatRoom(roomId, memberId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("leave success");
+    }
 }
