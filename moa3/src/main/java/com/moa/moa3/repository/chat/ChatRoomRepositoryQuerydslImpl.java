@@ -1,7 +1,6 @@
 package com.moa.moa3.repository.chat;
 
 import com.moa.moa3.entity.chat.ChatRoom;
-import com.moa.moa3.entity.chat.QChatRoom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
