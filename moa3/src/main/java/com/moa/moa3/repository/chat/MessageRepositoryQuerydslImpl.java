@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.moa.moa3.entity.chat.QMessage.*;
@@ -35,5 +36,15 @@ public class MessageRepositoryQuerydslImpl implements MessageRepositoryQuerydsl{
                         .limit(1)
                         .fetchOne()
         );
+    }
+
+    @Override
+    public List<Message> findMessagesBeforeCursor(Long chatRoomId, LocalDateTime cursor, int limit) {
+        return query
+                .selectFrom(message)
+                .where(message.roomId.eq(chatRoomId), message.createdAt.before(cursor))
+                .orderBy(message.createdAt.desc())
+                .limit(limit)
+                .fetch();
     }
 }

@@ -14,6 +14,13 @@ public class MessageDto {
     public MessageDto() {
     }
 
+    public MessageDto(Message message) {
+        this.type = message.getType();
+        this.content = message.getContent();
+        this.senderId = message.getSenderId();
+        this.roomId = message.getRoomId();
+    }
+
     @Builder
     public MessageDto(MessageType type, String content, Long senderId, Long roomId) {
         this.type = type;
