@@ -1,5 +1,8 @@
 package com.moa.moa3.service.chat;
 
+import com.moa.moa3.dto.chat.ChatRoomDto;
+import com.moa.moa3.dto.chat.ChatRoomsResponse;
+import com.moa.moa3.dto.chat.LastChatDto;
 import com.moa.moa3.dto.chat.MessageDto;
 import com.moa.moa3.entity.chat.ChatRoom;
 import com.moa.moa3.entity.chat.ChatRoomsMembersJoin;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -87,4 +91,24 @@ public class ChatService {
 
         chatRoom.getMessages().add(message);
     }
+
+    public ChatRoomsResponse getChatRooms(Long memberId) {
+        ChatRoomsResponse chatRoomResponse = new ChatRoomsResponse();
+
+        Member member = memberRepository.findByIdWithChatRoomsAndLastAccess(memberId).orElseThrow(
+                () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
+        );
+        List<ChatRoom> chatRooms = member.getChatRoomsMembersJoins().stream().map(ChatRoomsMembersJoin::getChatRoom).toList();
+        for (ChatRoom chatRoom : chatRooms) {
+            LocalDateTime lastAccess = member.getLastAccessTimes().get(chatRoom.getId());
+            if (lastAccess == null) {
+                lastAccess = LocalDateTime.MIN;
+            }
+            int unreadCount = messageRepository.countUnreadMessage(chatRoom.getId(), lastAccess);
+            Message lastMessage = messageRepository.findLastMessage(chatRoom.getId()).orElse(null);
+            chatRoomResponse.getChatRooms().add(new ChatRoomDto(chatRoom.getId(), chatRoom.getTitle(), unreadCount, new LastChatDto(lastMessage)));
+        }
+        return chatRoomResponse;
+    }
+
 }
