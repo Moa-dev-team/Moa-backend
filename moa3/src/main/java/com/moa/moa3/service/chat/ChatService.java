@@ -119,4 +119,7 @@ public class ChatService {
         member.getLastAccessTimes().put(roomId, LocalDateTime.now());
     }
 
+    public List<MessageDto> getMessages(Long chatRoomId, LocalDateTime cursor, int limit) {
+        return messageRepository.findMessagesBeforeCursor(chatRoomId, cursor ,limit).stream().map(MessageDto::new).toList();
+    }
 }
