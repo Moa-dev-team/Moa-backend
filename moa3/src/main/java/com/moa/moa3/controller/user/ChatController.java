@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 // 현재 인증, 인가 절차를 진행하고 있지 않지만 향후 포함될 수 있습니다.
 @RestController
 @RequestMapping("/chat")
@@ -36,5 +38,16 @@ public class ChatController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(chatService.getChatRooms(memberId));
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity getChatMessages(
+            @RequestParam Long roomId,
+            @RequestParam(required = false)LocalDateTime cursor,
+            @RequestParam(required = false, defaultValue = "20")Integer limit
+            ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(chatService);
     }
 }
