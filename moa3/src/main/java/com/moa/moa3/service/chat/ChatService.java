@@ -1,9 +1,6 @@
 package com.moa.moa3.service.chat;
 
-import com.moa.moa3.dto.chat.ChatRoomDto;
-import com.moa.moa3.dto.chat.ChatRoomsResponse;
-import com.moa.moa3.dto.chat.LastChatDto;
-import com.moa.moa3.dto.chat.MessageDto;
+import com.moa.moa3.dto.chat.*;
 import com.moa.moa3.entity.chat.ChatRoom;
 import com.moa.moa3.entity.chat.ChatRoomsMembersJoin;
 import com.moa.moa3.entity.chat.Message;
@@ -30,8 +27,8 @@ public class ChatService {
     private static final LocalDateTime MIN_DATE = LocalDateTime.of(2000, 1, 1, 0, 0);
 
     @Transactional
-    public Long createChatRoom() {
-        ChatRoom chatRoom = new ChatRoom();
+    public Long createChatRoom(CreateChatRequest request) {
+        ChatRoom chatRoom = new ChatRoom(request.getTitle());
         chatRoomRepository.save(chatRoom);
         return chatRoom.getId();
     }
@@ -59,7 +56,7 @@ public class ChatService {
         ChatRoom chatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
         );
-        Member member = memberRepository.findByIdWithChatRoomsMembersJoins(memberId).orElseThrow(
+        Member member = memberRepository.findByIdWithChatRooms(memberId).orElseThrow(
                 () -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")
         );
         chatRoom.getChatRoomsMembersJoins().

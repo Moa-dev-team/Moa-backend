@@ -2,7 +2,9 @@ package com.moa.moa3.entity.chat;
 
 import com.moa.moa3.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
  */
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "chat_room_id")
@@ -27,4 +30,8 @@ public class ChatRoom extends BaseEntity {
     // 채팅방이 사라지면 안에 있던 메시지들도 같이 삭제됩니다.
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
+
+    public ChatRoom(String title) {
+        this.title = title;
+    }
 }

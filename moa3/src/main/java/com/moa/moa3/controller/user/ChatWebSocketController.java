@@ -30,7 +30,7 @@ public class ChatWebSocketController {
     public MessageDto addUser(@Payload MessageDto messageDto,
                               SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("memberId", messageDto.getSenderId());
-        headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());    
+        headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());
         return messageDto;
     }
 }

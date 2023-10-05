@@ -27,7 +27,7 @@ public class ChatController {
 
     @PostMapping("/create")
     public ResponseEntity createChatRoom(@RequestBody CreateChatRequest createChatRequest) {
-        Long roomId = chatService.createChatRoom();
+        Long roomId = chatService.createChatRoom(createChatRequest);
         chatService.addChatMembers(roomId, createChatRequest.getMemberIds());
         return ResponseEntity
                 .status(HttpStatus.OK)
