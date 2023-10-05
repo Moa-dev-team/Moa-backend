@@ -53,7 +53,7 @@ public class ChatService {
 
     @Transactional
     public void leaveChatRoom(Long chatRoomId, Long memberId) {
-        ChatRoom chatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).orElseThrow(
+        ChatRoom chatRoom = chatRoomRepository.findByIdWithMembers(chatRoomId).orElseThrow(
                 () -> new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.")
         );
         Member member = memberRepository.findByIdWithChatRooms(memberId).orElseThrow(

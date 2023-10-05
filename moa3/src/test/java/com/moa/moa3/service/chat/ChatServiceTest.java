@@ -50,9 +50,10 @@ class ChatServiceTest {
 //
         Member findMember = memberRepository.findByIdWithChatRooms(member.getId()).get();
         assertThat(findMember.getChatRoomsMembersJoins().size()).isEqualTo(1);
+        assertThat(findMember.getChatRoomsMembersJoins().get(0).getChatRoom().getTitle()).isEqualTo("test");
 
-        ChatRoom findChatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).get();
-        assertThat(findChatRoom.getChatRoomsMembersJoins().size()).isEqualTo(1);
+        ChatRoom findChatRoom = chatRoomRepository.findByIdWithMembers(chatRoomId).get();
+        assertThat(findChatRoom.getChatRoomsMembersJoins().get(0).getMember().getName()).isEqualTo("test");
     }
 
     @Test
@@ -80,7 +81,7 @@ class ChatServiceTest {
         findMember.getChatRoomsMembersJoins().removeIf(
                 chatRoomsMembersJoin -> chatRoomsMembersJoin.getChatRoom().getId().equals(chatRoomId)
         );
-        ChatRoom findChatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).get();
+        ChatRoom findChatRoom = chatRoomRepository.findByIdWithMembers(chatRoomId).get();
         findChatRoom.getChatRoomsMembersJoins().removeIf(
                 chatRoomsMembersJoin -> chatRoomsMembersJoin.getMember().getId().equals(member.getId())
         );
@@ -110,7 +111,7 @@ class ChatServiceTest {
         em.flush();
         em.clear();
 
-        ChatRoom findChatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).get();
+        ChatRoom findChatRoom = chatRoomRepository.findByIdWithMembers(chatRoomId).get();
         Member findMember = memberRepository.findByIdWithChatRooms(member.getId()).get();
         assertThat(findChatRoom.getChatRoomsMembersJoins().size()).isEqualTo(0);
         assertThat(findMember.getChatRoomsMembersJoins().size()).isEqualTo(0);
@@ -134,7 +135,7 @@ class ChatServiceTest {
 
         Member findMember = memberRepository.findByIdWithChatRooms(member.getId()).get();
         assertThat(findMember.getChatRoomsMembersJoins().size()).isEqualTo(0);
-        ChatRoom chatRoom = chatRoomRepository.findByIdWithChatRoomsMembersJoins(chatRoomId).get();
+        ChatRoom chatRoom = chatRoomRepository.findByIdWithMembers(chatRoomId).get();
         assertThat(chatRoom.getChatRoomsMembersJoins().size()).isEqualTo(0);
     }
 }

@@ -5,6 +5,6 @@ import com.moa.moa3.entity.chat.ChatRoom;
 import java.util.Optional;
 
 public interface ChatRoomRepositoryQuerydsl {
-    Optional<ChatRoom> findByIdWithChatRoomsMembersJoins(Long id);
+    Optional<ChatRoom> findByIdWithMembers(Long id);
     Optional<ChatRoom> findByIdWithMessages(Long id);
 }
